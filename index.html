@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ETHEL_RYKER.LOG</title>
+    <meta name="description" content="Ethel Ryker — Operational Log. Encrypted personal archive." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: #050505;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Boot-line fade-in */
+        @keyframes bootFadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .boot-line {
+            opacity: 0;
+            animation: bootFadeIn 0.4s ease forwards;
+        }
+
+        /* Subtle scanline overlay */
+        .scanlines::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background: repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 0, 0, 0.03) 2px,
+                    rgba(0, 0, 0, 0.03) 4px);
+            z-index: 9999;
+        }
+
+        /* ── PIXELSTORTION MANAGEMENT BRAND ── */
+        .ps-brand {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.5rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: #3f3f46;
+            text-decoration: none;
+            transition: color 0.2s, text-shadow 0.2s;
+            position: relative;
+        }
+
+        .ps-brand:hover {
+            color: #ef4444;
+            text-shadow: 0 0 8px rgba(220, 38, 38, 0.5);
+        }
+
+        .ps-brand::after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 1px;
+            background: #dc2626;
+            opacity: 0;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+
+        .ps-brand:hover::after {
+            opacity: 0.6;
+            transform: scaleX(1);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+
+<body class="scanlines">
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module">
+        const { useState, useEffect, useRef } = React;
+
+        // ─── Inline SVG Icon Components (replacing lucide-react) ───
+        const Icon = ({ children, size = 24, className = '' }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                className={className}>
+                {children}
+            </svg>
+        );
+
+        const Shield = ({ size, className }) => (
+            <Icon size={size} className={className}>
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </Icon>
+        );
+        const AlertTriangle = ({ size, className }) => (
+            <Icon size={size} className={className}>
+                <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
+            </Icon>
+        );
+        const Terminal = ({ size, className }) => (
+            <Icon size={size} className={className}>
+                <polyline points="4 17 10 11 4 5" /><line x1="12" y1="19" x2="20" y2="19" />
+            </Icon>
+        );
+        const Lock = ({ size, className }) => (
+            <Icon size={size} className={className}>
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0110 0v4" />
+            </Icon>
+        );
+        const Eye = ({ size, className }) => (
+            <Icon size={size} className={className}>
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+            </Icon>
+        );
+        const FileText = ({ size, className }) => (
+            <Icon size={size} className={className}>
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                <polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" />
+            </Icon>
+        );
+        const Activity = ({ size, className }) => (
+            <Icon size={size} className={className}>
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+            </Icon>
+        );
+        const Database = ({ size, className }) => (
+            <Icon size={size} className={className}>
+                <ellipse cx="12" cy="5" rx="9" ry="3" />
+                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+            </Icon>
+        );
+        const X = ({ size, className }) => (
+            <Icon size={size} className={className}>
+                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+            </Icon>
+        );
+        const ChevronRight = ({ size, className }) => (
+            <Icon size={size} className={className}>
+                <polyline points="9 18 15 12 9 6" />
+            </Icon>
+        );
+        const Radio = ({ size, className }) => (
+            <Icon size={size} className={className}>
+                <circle cx="12" cy="12" r="2" />
+                <path d="M16.24 7.76a6 6 0 010 8.49m-8.48-.01a6 6 0 010-8.49m11.31-2.82a10 10 0 010 14.14m-14.14 0a10 10 0 010-14.14" />
+            </Icon>
+        );
+
+        // ═══════════════════════════════════════════════════
+        // MAIN APPLICATION
+        // ═══════════════════════════════════════════════════
+
+        const EthelRykerSite = () => {
+            const [activeSector, setActiveSector] = useState('STATUS');
+            const [currentTime, setCurrentTime] = useState('');
+            const [bootSequence, setBootSequence] = useState(true);
+            const [securityLevel] = useState('ELEVATED');
+            const [selectedFile, setSelectedFile] = useState(null);
+
+            // System clock
+            useEffect(() => {
+                const timer = setInterval(() => {
+                    const now = new Date();
+                    setCurrentTime(now.toISOString().replace('T', ' ').substring(0, 19));
+                }, 1000);
+                const bootTimer = setTimeout(() => setBootSequence(false), 2500);
+                return () => { clearInterval(timer); clearTimeout(bootTimer); };
+            }, []);
+
+            // ─── DATA ARCHIVES ───
+            const logs = {
+                ORIGIN: [
+                    {
+                        id: 'LOG_2016_NOV_14',
+                        title: 'THE_DROP_CALCULATION',
+                        ref_img: 'FILE_08',
+                        context: 'PHASE 1: THE OUTBACK',
+                        status: 'CALCULATED',
+                        data: "It wasn't a cliff. It was geometry. The stock kids saw death. I saw parallax. From the creek bed up, the landing vector was a safe incline. I didn't jump because I was brave. I jumped because the math held.",
+                        full_text: `SUBJECT: THE DROP
+DATE: NOV 14, 2016
+LOCATION: Top End / The Gorge
+
+ANALYSIS:
+The world was predictable. Red dirt. Clear water. Geometry didn't lie.
+The "stock kids" saw a cliff. They saw a twenty-meter drop into a basin wrapped in green. They saw a binary outcome:
+Life or Death.
+
+I saw the third option: Parallax.
+From their shelf, the rock teeth looked fatal. Depth squeezes distance. But I had mapped the vector from the creek bed
+up. It was an optical illusion. The landing angle was a safe incline if you hit the water with forward velocity.
+
+ACTION:
+I didn't pause. Hesitation changes the velocity.
+Launch. Air takes over. Arms align with the drop's pull.
+Impact. Water wraps shut. Pressure locks the ribs.
+Surface break.
+
+CONCLUSION:
+Fear is a matter of perspective. I didn't jump to impress them. I jumped to prove that my calculations override their
+perceptions.`
+                    },
+                    {
+                        id: 'LOG_2019_JAN_20',
+                        title: 'RIDE_PROTOCOL',
+                        ref_img: 'FILE_07',
+                        context: 'PHASE 1: EVASION',
+                        status: 'EXECUTED',
+                        data: "When others slipped into easy crime, I stepped back quietly. The system called me 'withdrawn'. I call it 'operational security'. I ride the edge but I don't drift blind.",
+                        full_text: `SUBJECT: THE RIDE / EXPULSION
+DATE: JAN 20, 2019
+STATUS: DISPLACEMENT EVENT
+
+EVENT LOG:
+I logged into the teacher's computer. I uncovered proof of fraud. Grants said one thing, seats said another. Per-student
+funds don't vanish; they move. I tracked the route: time, screen, path.
+
+RESPONSE:
+They called it "hacking." They called me "hostile."
+He kept his post. I got expelled.
+The system protects the error if the error is structural.
+
+ADAPTATION:
+I took the bike. Honda CB series.
+I ride the fence line straight. I don't run fast; I run true.
+The path moves when I need it to.
+You think I'm chaos? I think you don't listen.
+I track the cost by what is missing.`
+                    }
+                ],
+                DOMINIC: [
+                    {
+                        id: 'SUB_RYKER_DOMINIC',
+                        title: 'THREAT_ASSESSMENT',
+                        ref_img: 'FILE_09',
+                        context: 'PHASE 2: THE HOUSE',
+                        status: 'UNCONTAINED',
+                        warning: true,
+                        data: "He sells comfort while pulling threads. He reframes violence as 'instruction'. The primary risk is not rage, but rhythm. Status: ESCAPED. Current Location: UNKNOWN.",
+                        full_text: `SUBJECT: DOMINIC RYKER
+RELATION: BIOLOGICAL FATHER / HOSTILE ENTITY
+STATUS: AT LARGE (JAN 2024 ESCAPE)
+
+PROFILE:
+A man who reshapes skylines does not "lose" a family; he archives them.
+He moves like nothing could touch his skin. Mostly, it didn't.
+He sells comfort while pulling threads. He wraps you quiet while I file anger to a calm point.
+
+METHODOLOGY:
+1. "The Hero Complex": He creates the disaster so he can be the one to solve it.
+2. "Same Breath": He can save a man and execute him in the same hour. The rescue buys loyalty; the execution buys fear.
+3. "Sequencing": He doesn't lie; he orders facts in a way that leads you to the wrong conclusion.
+
+CURRENT THREAT:
+He escaped prison not by force, but by rhythm. He creates a tempo that people naturally follow.
+He is currently uncontained.
+Recommendation: Do not engage. Observe only.`
+                    },
+                    {
+                        id: 'EVIDENCE_HERO_KILLER',
+                        title: 'TESTIMONY_TRANSCRIPT',
+                        ref_img: 'FILE_03',
+                        context: 'PHASE 4: THE TRIAL',
+                        status: 'ADMISSIBLE',
+                        data: "They called him Builder. Protector. Hero. I called him Cost. Every wall he raised, someone buried under. I went to the stand not to cry, but to dismantle the myth.",
+                        full_text: `TRANSCRIPT: RYKER VS. THE CROWN
+WITNESS: ETHEL RYKER
+DATE: APR 2020
+
+[EXCERPT]
+They called him Builder. Protector. Hero.
+They said he got things done.
+I sat in the stand. I didn't cry. I didn't use the words they wrote for me.
+
+"Nothing True. Nothing Refuted."
+
+I dismantled the myth piece by piece.
+Every wall he raised, someone is buried under.
+Applause hides the blood, but the cracks keep showing.
+I've got the same refusal to back down. Difference is, I don't turn it on the unarmed.
+
+VERDICT:
+Guilty.
+But the victory is structural, not emotional. He is in a cage, but he built the cage.
+I am merely the one who locked the door.`
+                    }
+                ],
+                ISLA: [
+                    {
+                        id: 'SUB_ISLA',
+                        title: 'VARIABLE_CHAOS',
+                        ref_img: 'FILE_10',
+                        context: 'PHASE 3: THE ALLIANCE',
+                        status: 'MONITORED',
+                        data: "She fights the world by detonating it. I fight it by archiving it. We are inverse functions. She burns the bridge; I document the structural failure.",
+                        full_text: `SUBJECT: ISLA
+RELATION: ALLY / SISTER-IN-ARMS
+CODE: CHAOS VARIABLE
+
+OBSERVATION:
+We met in the Mosman house. She was "chaos wrapped in neon."
+People called her manic. I noted she was the only person in that house reacting rationally to the rot.
+She is the canary in the coal mine.
+
+DYNAMICS:
+She burns the bridge. I build the case.
+She screams the truth. I file the evidence.
+She initiates the hack (Sept 2022). I process the data.
+
+STATUS:
+She is currently touring. Turning damage into noise.
+She is safer when she is loud.
+I monitor her signal. If it drops, I move.`
+                    }
+                ]
+            };
+
+            // ─── BOOT SCREEN ───
+            if (bootSequence) {
+                return (
+                    <div className="min-h-screen bg-black text-green-500 font-mono flex flex-col items-center justify-center p-8">
+                        <div className="w-full max-w-md space-y-2">
+                            <div className="border-b border-green-900 pb-2 mb-4 flex justify-between">
+                                <span>RYKER_OS v4.2.1</span>
+                                <span>INITIALIZING...</span>
+                            </div>
+                            <p className="boot-line" style={{ animationDelay: '0.2s' }}>&gt; ESTABLISHING SECURE CONNECTION</p>
+                            <p className="boot-line" style={{ animationDelay: '0.6s' }}>&gt; LOADING MORAL_FRAMEWORK_DRIVERS</p>
+                            <p className="boot-line" style={{ animationDelay: '1.0s' }}>&gt; SUPPRESSING EMOTIONAL_INTERFERENCE</p>
+                            <p className="boot-line" style={{ animationDelay: '1.4s' }}>&gt; MOUNTING ISLA_ARCHIVE... [WARNING: VOLATILE]</p>
+                            <p className="boot-line" style={{ animationDelay: '1.8s' }}>&gt; ACCESS GRANTED</p>
+                        </div>
+                    </div>
+                );
+            }
+
+            // ─── MAIN UI ───
+            return (
+                <div className="min-h-screen bg-[#050505] text-gray-400 font-mono text-sm overflow-hidden flex flex-col">
+
+                    {/* HEADER */}
+                    <header className="h-14 border-b border-gray-800 bg-[#0a0a0a] flex items-center justify-between px-6 z-20 flex-shrink-0">
+                        <div className="flex items-center space-x-4">
+                            <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" style={{ boxShadow: '0 0 8px rgba(239,68,68,0.6)' }}></div>
+                            <div className="flex flex-col" style={{ gap: '0.15rem' }}>
+                                <a href="https://pixelstortion.com" target="_blank" rel="noopener noreferrer" className="ps-brand">PIXELSTORTION</a>
+                                <h1 className="text-gray-100 font-bold tracking-widest text-lg" style={{ lineHeight: 1 }}>ETHEL_RYKER<span className="text-gray-600">.LOG</span></h1>
+                            </div>
+                        </div>
+                        <div className="hidden md:flex items-center space-x-8 text-xs">
+                            <div className="flex items-center space-x-2">
+                                <Activity size={14} className="text-gray-500" />
+                                <span>SYSTEM: STABLE</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <Shield size={14} className="text-red-500" />
+                                <span className="text-red-400">THREAT LEVEL: {securityLevel}</span>
+                            </div>
+                            <div className="text-gray-600 border-l border-gray-800 pl-4">
+                                {currentTime} UTC
+                            </div>
+                        </div>
+                    </header>
+
+                    <div className="flex flex-1 overflow-hidden relative">
+
+                        {/* SIDEBAR */}
+                        <nav className="w-16 md:w-64 bg-black border-r border-gray-800 flex flex-col justify-between z-10 flex-shrink-0">
+                            <div className="flex flex-col">
+                                <NavButton active={activeSector === 'STATUS'} onClick={() => setActiveSector('STATUS')} icon={<Activity size={18} />} label="CURRENT_STATUS" />
+                                <NavButton active={activeSector === 'ORIGIN'} onClick={() => setActiveSector('ORIGIN')} icon={<Database size={18} />} label="ORIGIN_FILES" />
+                                <NavButton active={activeSector === 'DOMINIC'} onClick={() => setActiveSector('DOMINIC')} icon={<Lock size={18} />} label="SUB_DOMINIC" alert={true} />
+                                <NavButton active={activeSector === 'ISLA'} onClick={() => setActiveSector('ISLA')} icon={<Radio size={18} />} label="SUB_ISLA" />
+                                <NavButton active={activeSector === 'MANIFESTO'} onClick={() => setActiveSector('MANIFESTO')} icon={<FileText size={18} />} label="MANIFESTO" />
+                            </div>
+                            <div className="p-4 border-t border-gray-800 text-[10px] text-gray-600 hidden md:block">
+                                <p>ENCRYPTION: AES-256</p>
+                                <p className="mt-1">NODE: SYD_NORTH</p>
+                                <p className="mt-4 text-red-900">DO NOT DISTRIBUTE</p>
+                            </div>
+                        </nav>
+
+                        {/* MAIN CONTENT */}
+                        <main className="flex-1 overflow-y-auto bg-[#080808] p-4 md:p-8 relative">
+                            {/* Background grid */}
+                            <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
+                                style={{ backgroundImage: 'linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
+                            </div>
+
+                            <div className="max-w-5xl mx-auto relative z-10">
+                                {activeSector === 'STATUS' && <StatusDashboard />}
+                                {activeSector === 'ORIGIN' && <LogSection data={logs.ORIGIN} title="SECTOR 1: ORIGIN" color="green" onSelect={setSelectedFile} />}
+                                {activeSector === 'DOMINIC' && <LogSection data={logs.DOMINIC} title="SECTOR 9: THREAT CONTAINMENT" color="red" onSelect={setSelectedFile} />}
+                                {activeSector === 'ISLA' && <LogSection data={logs.ISLA} title="SECTOR 4: ALLIED VARIABLE" color="blue" onSelect={setSelectedFile} />}
+                                {activeSector === 'MANIFESTO' && <ManifestoSection />}
+                            </div>
+                        </main>
+
+                        {/* FILE VIEWER OVERLAY */}
+                        {selectedFile && <FileViewer file={selectedFile} onClose={() => setSelectedFile(null)} />}
+                    </div>
+                </div>
+            );
+        };
+
+        // ═══════════════════════════════════════════════════
+        // SUB-COMPONENTS
+        // ═══════════════════════════════════════════════════
+
+        const NavButton = ({ active, onClick, icon, label, alert }) => (
+            <button onClick={onClick}
+                className={`w-full flex items-center p-4 transition-all duration-200 border-b border-gray-900 cursor-pointer
+                    ${active ? 'bg-gray-900 text-gray-100 border-l-4 border-l-gray-100' : 'text-gray-500 hover:bg-gray-950 hover:text-gray-300 border-l-4 border-l-transparent'}`}>
+                <div className="relative">
+                    {icon}
+                    {alert && <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-ping"></span>}
+                </div>
+                <span className="ml-4 hidden md:block font-bold tracking-wider text-xs">{label}</span>
+            </button>
+        );
+
+        const StatusDashboard = () => (
+            <div className="space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* PRIMARY STATUS */}
+                    <div className="bg-black border border-gray-800 p-6 shadow-2xl relative overflow-hidden group hover:border-gray-600 transition-colors">
+                        <div className="absolute top-0 right-0 p-2 opacity-50">
+                            <Activity size={48} className="text-gray-800" />
+                        </div>
+                        <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Operational Status</h2>
+                        <div className="text-2xl text-white font-bold mb-4">OBSERVATION MODE</div>
+                        <p className="text-gray-400 leading-relaxed mb-4">
+                            Currently monitoring fallout from the Ryker Trial. Subject "Dominic" has breached containment (Jan 2024).
+                            I am not chasing. I am pattern-matching.
+                        </p>
+                        <div className="flex items-center space-x-2 text-xs text-red-400">
+                            <AlertTriangle size={12} />
+                            <span>ALERT: ANOMALY DETECTED IN SECTOR 9</span>
+                        </div>
+                    </div>
+
+                    {/* ASSET TRACKING */}
+                    <div className="bg-black border border-gray-800 p-6 shadow-2xl relative group hover:border-gray-600 transition-colors">
+                        <div className="absolute top-0 right-0 p-2 opacity-50">
+                            <Eye size={48} className="text-gray-800" />
+                        </div>
+                        <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Key Asset Tracking</h2>
+                        <ul className="space-y-3 mt-4">
+                            <li className="flex justify-between items-center border-b border-gray-900 pb-2">
+                                <span>ISLA (Sister-in-Arms)</span>
+                                <span className="text-blue-400 bg-blue-900/20 px-2 py-0.5 rounded text-[10px]">ACTIVE / TOURING</span>
+                            </li>
+                            <li className="flex justify-between items-center border-b border-gray-900 pb-2">
+                                <span>DOMINIC (Father/Threat)</span>
+                                <span className="text-red-400 bg-red-900/20 px-2 py-0.5 rounded text-[10px]">AT LARGE</span>
+                            </li>
+                            <li className="flex justify-between items-center border-b border-gray-900 pb-2">
+                                <span>ETHEL (Self)</span>
+                                <span className="text-green-400 bg-green-900/20 px-2 py-0.5 rounded text-[10px]">STATIONARY</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                {/* VISUAL REF */}
+                <div className="w-full bg-black border border-gray-800 p-1">
+                    <div className="bg-gray-900 h-64 md:h-96 w-full flex flex-col items-center justify-center relative overflow-hidden">
+                        <div className="absolute inset-0 bg-cover bg-center opacity-60 grayscale"
+                            style={{ backgroundImage: "url('https://raw.githubusercontent.com/NJsalubrious/pixelstortion-assets/fe69695828163516891d25aef39473b8a947e00b/Ethel_misc/Ethel_court_photo_723d75_b516d6fd8c044b7d92de4fe7adca1b8c.jpg')", mixBlendMode: 'luminosity' }}>
+                        </div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                        <div className="z-10 text-center p-6 mt-auto absolute bottom-0 w-full bg-black/80 backdrop-blur-sm border-t border-gray-800">
+                            <h3 className="text-white font-bold text-lg mb-1">POST-TRIAL STATUS</h3>
+                            <p className="text-xs text-gray-400 uppercase tracking-widest">FILE REF: 004-A // THE AFTERMATH</p>
+                            <p className="text-gray-300 mt-2 max-w-2xl mx-auto italic">"I stood when called, held the line. Stillness sharpened into design."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const LogSection = ({ data, title, color, onSelect }) => {
+            const colorClasses = {
+                red: 'border-red-900 text-red-500',
+                green: 'border-green-900 text-green-500',
+                blue: 'border-blue-900 text-blue-500'
+            };
+            const glowStyles = {
+                red: '0 0 15px rgba(127,29,29,0.2)',
+                green: '0 0 15px rgba(20,83,45,0.2)',
+                blue: '0 0 15px rgba(30,58,138,0.2)'
+            };
+
+            const imageMap = {
+                'FILE_08': 'https://rawcdn.githack.com/NJsalubrious/pixelstortion-assets/877efdc4d8489833bcf97e2c373a7032706bbfd3/library/char_ethel_media/images/track_02/018_track.jpg',
+                'FILE_07': 'https://rawcdn.githack.com/NJsalubrious/pixelstortion-assets/877efdc4d8489833bcf97e2c373a7032706bbfd3/library/char_ethel_media/images/track_01/007_track.jpg',
+                'FILE_09': 'https://raw.githubusercontent.com/NJsalubrious/pixelstortion-assets/3df22e03b47d24582d0111a7db8767bb2a227bf6/Dominic_misc/Dominic_prison_photo_02.jpg',
+                'FILE_10': 'https://raw.githubusercontent.com/NJsalubrious/pixelstortion-assets/ae8fc106b6bcdfb893b871cda989784903c02c09/Isla_misc/isla_0001_723d75_e18c6345f0354e30b9e206ff486ea81d.jpg',
+                'FILE_03': 'https://raw.githubusercontent.com/NJsalubrious/pixelstortion-assets/fe69695828163516891d25aef39473b8a947e00b/Ethel_misc/Ethel_court_photo_723d75_b516d6fd8c044b7d92de4fe7adca1b8c.jpg'
+            };
+
+            return (
+                <div>
+                    <div className={`flex items-center space-x-3 mb-8 border-b ${colorClasses[color]} pb-4`}>
+                        <Terminal size={20} />
+                        <h2 className="text-xl font-bold tracking-widest text-gray-100">{title}</h2>
+                    </div>
+
+                    <div className="grid gap-8">
+                        {data.map((log, idx) => (
+                            <div key={idx} className="bg-[#0a0a0a] border border-gray-800 p-0 flex flex-col md:flex-row overflow-hidden group"
+                                style={{ boxShadow: glowStyles[color] }}>
+                                {/* Image */}
+                                <div className="w-full md:w-1/3 min-h-[200px] bg-cover bg-center grayscale group-hover:grayscale-0 transition-all duration-700 relative"
+                                    style={{ backgroundImage: `url('${imageMap[log.ref_img] || ''}')` }}>
+                                    <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                                    <div className="absolute bottom-2 left-2 bg-black/80 px-2 py-1 text-[10px] text-white font-bold border border-gray-700">
+                                        IMG_REF: {log.ref_img}
+                                    </div>
+                                </div>
+
+                                {/* Text */}
+                                <div className="p-6 flex-1 flex flex-col justify-between">
+                                    <div>
+                                        <div className="flex justify-between items-start mb-4">
+                                            <div>
+                                                <h3 className="text-lg font-bold text-gray-200">{log.title}</h3>
+                                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${log.warning ? 'bg-red-900/30 text-red-400' : 'bg-gray-800 text-gray-400'}`}>
+                                                    STATUS: {log.status}
+                                                </span>
+                                            </div>
+                                            <span className="text-xs text-gray-600 font-mono">{log.id}</span>
+                                        </div>
+                                        <p className="text-gray-400 leading-relaxed border-l-2 border-gray-800 pl-4 py-2 text-sm">
+                                            "{log.data}"
+                                        </p>
+                                    </div>
+                                    <div className="mt-6 pt-4 border-t border-gray-900 flex justify-between items-center text-xs text-gray-600">
+                                        <span>CONTEXT: {log.context}</span>
+                                        <button onClick={() => onSelect(log)} className="flex items-center space-x-1 hover:text-white transition-colors cursor-pointer">
+                                            <span>EXPAND FILE</span>
+                                            <ChevronRight size={12} />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const ManifestoSection = () => (
+            <div className="max-w-2xl mx-auto py-8">
+                <div className="border-l-2 border-green-900 pl-6 space-y-6">
+                    <div>
+                        <h3 className="text-green-500 font-bold mb-2 text-xs tracking-widest">DIRECTIVE 1: THE ANTI-REFLEXIVE PAUSE</h3>
+                        <p className="text-gray-400">Do not validate immediately. Look for the missing context. The silence is not absence; it is structure.</p>
+                    </div>
+                    <div>
+                        <h3 className="text-green-500 font-bold mb-2 text-xs tracking-widest">DIRECTIVE 2: MORAL GEOMETRY</h3>
+                        <p className="text-gray-400">Do not say "This is bad." Say "This is unstable." Bad is an opinion. Unstable is a calculation. Calculations predict collapse. Opinions just watch it happen.</p>
+                    </div>
+                    <div>
+                        <h3 className="text-green-500 font-bold mb-2 text-xs tracking-widest">DIRECTIVE 3: PATTERN RECOGNITION</h3>
+                        <p className="text-gray-400">I move when harm starts forming, not when it lands. If I am right, you are safe. If I am wrong, I realign. But I do not wait.</p>
+                    </div>
+                    <div className="pt-8 mt-8 border-t border-gray-900">
+                        <p className="text-gray-500 italic">
+                            "My father built cities. Towers. Legends. Corpses, too. I didn't walk away when the myth unravelled. I lived inside it. And I kept the receipts."
+                        </p>
+                        <p className="text-right mt-4 font-bold text-gray-300">- E. Ryker</p>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const FileViewer = ({ file, onClose }) => (
+            <div className="absolute inset-0 z-50 bg-black/95 backdrop-blur-md flex items-center justify-center p-4 md:p-12">
+                <div className="w-full max-w-3xl bg-[#0a0a0a] border border-green-900/50 flex flex-col max-h-full" style={{ boxShadow: '0 0 50px rgba(0,0,0,0.8)' }}>
+                    {/* Header */}
+                    <div className="flex items-center justify-between p-4 border-b border-green-900/30 bg-black flex-shrink-0">
+                        <div className="flex items-center space-x-3">
+                            <Terminal size={18} className="text-green-500" />
+                            <span className="text-green-500 font-bold tracking-widest text-sm">VIEWING: {file.title}.LOG</span>
+                        </div>
+                        <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors cursor-pointer">
+                            <X size={20} />
+                        </button>
+                    </div>
+                    {/* Content */}
+                    <div className="p-8 overflow-y-auto font-mono text-sm leading-relaxed text-gray-300" style={{ selectionBackground: '#14532d', selectionColor: '#fff' }}>
+                        <pre className="whitespace-pre-wrap" style={{ fontFamily: 'inherit' }}>
+                            {file.full_text || "ERROR: FILE CORRUPTED OR REDACTED."}
+                        </pre>
+                    </div>
+                    {/* Footer */}
+                    <div className="p-4 border-t border-green-900/30 bg-black flex justify-between items-center text-xs text-gray-600 flex-shrink-0">
+                        <span>SECURITY: TOP SECRET // R. RYKER</span>
+                        <div className="flex space-x-4">
+                            <button className="hover:text-green-500 transition-colors cursor-pointer">[ DECRYPT ]</button>
+                            <button className="hover:text-green-500 transition-colors cursor-pointer">[ DOWNLOAD ]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        // ─── MOUNT ───
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<EthelRykerSite />);
+    </script>
+</body>
+
+</html>
