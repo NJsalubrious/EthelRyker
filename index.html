@@ -273,6 +273,7 @@ I track the cost by what is missing.`
                         id: 'SUB_RYKER_DOMINIC',
                         title: 'THREAT_ASSESSMENT',
                         ref_img: 'FILE_09',
+                        external_url: 'https://dominicryker.com',
                         context: 'PHASE 2: THE HOUSE',
                         status: 'UNCONTAINED',
                         warning: true,
@@ -330,6 +331,7 @@ I am merely the one who locked the door.`
                         id: 'SUB_ISLA',
                         title: 'VARIABLE_CHAOS',
                         ref_img: 'FILE_10',
+                        external_url: 'https://islaband.com',
                         context: 'PHASE 3: THE ALLIANCE',
                         status: 'MONITORED',
                         data: "She fights the world by detonating it. I fight it by archiving it. We are inverse functions. She burns the bridge; I document the structural failure.",
@@ -553,13 +555,24 @@ I monitor her signal. If it drops, I move.`
                             <div key={idx} className="bg-[#0a0a0a] border border-gray-800 p-0 flex flex-col md:flex-row overflow-hidden group"
                                 style={{ boxShadow: glowStyles[color] }}>
                                 {/* Image */}
-                                <div className="w-full md:w-1/3 min-h-[200px] bg-cover bg-center grayscale group-hover:grayscale-0 transition-all duration-700 relative"
-                                    style={{ backgroundImage: `url('${imageMap[log.ref_img] || ''}')` }}>
-                                    <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
-                                    <div className="absolute bottom-2 left-2 bg-black/80 px-2 py-1 text-[10px] text-white font-bold border border-gray-700">
-                                        IMG_REF: {log.ref_img}
+                                {log.external_url ? (
+                                    <a href={log.external_url} target="_blank" rel="noopener noreferrer"
+                                        className="w-full md:w-1/3 min-h-[200px] bg-cover bg-center grayscale group-hover:grayscale-0 transition-all duration-700 relative block cursor-pointer"
+                                        style={{ backgroundImage: `url('${imageMap[log.ref_img] || ''}')` }}>
+                                        <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                                        <div className="absolute bottom-2 left-2 bg-black/80 px-2 py-1 text-[10px] text-white font-bold border border-gray-700">
+                                            IMG_REF: {log.ref_img}
+                                        </div>
+                                    </a>
+                                ) : (
+                                    <div className="w-full md:w-1/3 min-h-[200px] bg-cover bg-center grayscale group-hover:grayscale-0 transition-all duration-700 relative"
+                                        style={{ backgroundImage: `url('${imageMap[log.ref_img] || ''}')` }}>
+                                        <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                                        <div className="absolute bottom-2 left-2 bg-black/80 px-2 py-1 text-[10px] text-white font-bold border border-gray-700">
+                                            IMG_REF: {log.ref_img}
+                                        </div>
                                     </div>
-                                </div>
+                                )}
 
                                 {/* Text */}
                                 <div className="p-6 flex-1 flex flex-col justify-between">
