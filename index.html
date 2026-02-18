@@ -10,6 +10,7 @@
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="data-points/manifest.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
 
@@ -364,9 +365,9 @@ I monitor her signal. If it drops, I move.`
                                 <span>INITIALIZING...</span>
                             </div>
                             <p className="boot-line" style={{ animationDelay: '0.2s' }}>&gt; ESTABLISHING SECURE CONNECTION</p>
-                            <p className="boot-line" style={{ animationDelay: '0.6s' }}>&gt; LOADING MORAL_FRAMEWORK_DRIVERS</p>
-                            <p className="boot-line" style={{ animationDelay: '1.0s' }}>&gt; SUPPRESSING EMOTIONAL_INTERFERENCE</p>
-                            <p className="boot-line" style={{ animationDelay: '1.4s' }}>&gt; MOUNTING ISLA_ARCHIVE... [WARNING: VOLATILE]</p>
+                            <p className="boot-line" style={{ animationDelay: '0.6s' }}>&gt; LOADING MEMORY</p>
+                            <p className="boot-line" style={{ animationDelay: '1.0s' }}>&gt; FILTERING NOISE</p>
+                            <p className="boot-line" style={{ animationDelay: '1.4s' }}>&gt; CONNECTING ISLA... [SIGNAL: VOLATILE]</p>
                             <p className="boot-line" style={{ animationDelay: '1.8s' }}>&gt; ACCESS GRANTED</p>
                         </div>
                     </div>
@@ -410,7 +411,8 @@ I monitor her signal. If it drops, I move.`
                                 <NavButton active={activeSector === 'ORIGIN'} onClick={() => setActiveSector('ORIGIN')} icon={<Database size={18} />} label="ORIGIN_FILES" />
                                 <NavButton active={activeSector === 'DOMINIC'} onClick={() => setActiveSector('DOMINIC')} icon={<Lock size={18} />} label="SUB_DOMINIC" alert={true} />
                                 <NavButton active={activeSector === 'ISLA'} onClick={() => setActiveSector('ISLA')} icon={<Radio size={18} />} label="SUB_ISLA" />
-                                <NavButton active={activeSector === 'MANIFESTO'} onClick={() => setActiveSector('MANIFESTO')} icon={<FileText size={18} />} label="MANIFESTO" />
+                                <NavButton active={activeSector === 'WHERE_I_STAND'} onClick={() => setActiveSector('WHERE_I_STAND')} icon={<FileText size={18} />} label="WHERE_I_STAND" />
+                                <NavButton active={activeSector === 'DATA_POINTS'} onClick={() => setActiveSector('DATA_POINTS')} icon={<Database size={18} />} label="DATA_POINTS" />
                             </div>
                             <div className="p-4 border-t border-gray-800 text-[10px] text-gray-600 hidden md:block">
                                 <p>ENCRYPTION: AES-256</p>
@@ -431,7 +433,8 @@ I monitor her signal. If it drops, I move.`
                                 {activeSector === 'ORIGIN' && <LogSection data={logs.ORIGIN} title="SECTOR 1: ORIGIN" color="green" onSelect={setSelectedFile} />}
                                 {activeSector === 'DOMINIC' && <LogSection data={logs.DOMINIC} title="SECTOR 9: THREAT CONTAINMENT" color="red" onSelect={setSelectedFile} />}
                                 {activeSector === 'ISLA' && <LogSection data={logs.ISLA} title="SECTOR 4: ALLIED VARIABLE" color="blue" onSelect={setSelectedFile} />}
-                                {activeSector === 'MANIFESTO' && <ManifestoSection />}
+                                {activeSector === 'WHERE_I_STAND' && <WhereIStandSection />}
+                                {activeSector === 'DATA_POINTS' && <DataPointsSection />}
                             </div>
                         </main>
 
@@ -467,14 +470,14 @@ I monitor her signal. If it drops, I move.`
                             <Activity size={48} className="text-gray-800" />
                         </div>
                         <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Operational Status</h2>
-                        <div className="text-2xl text-white font-bold mb-4">OBSERVATION MODE</div>
+                        <div className="text-2xl text-white font-bold mb-4">STILL. WATCHING.</div>
                         <p className="text-gray-400 leading-relaxed mb-4">
-                            Currently monitoring fallout from the Ryker Trial. Subject "Dominic" has breached containment (Jan 2024).
-                            I am not chasing. I am pattern-matching.
+                            Dominic breached containment. January 2024.
+                            I'm not chasing. I'm watching.
                         </p>
                         <div className="flex items-center space-x-2 text-xs text-red-400">
                             <AlertTriangle size={12} />
-                            <span>ALERT: ANOMALY DETECTED IN SECTOR 9</span>
+                            <span>UNRESOLVED: DOMINIC</span>
                         </div>
                     </div>
 
@@ -589,30 +592,244 @@ I monitor her signal. If it drops, I move.`
             );
         };
 
-        const ManifestoSection = () => (
-            <div className="max-w-2xl mx-auto py-8">
-                <div className="border-l-2 border-green-900 pl-6 space-y-6">
+        const WhereIStandSection = () => (
+            <div className="max-w-2xl mx-auto py-8 space-y-16">
+
+                {/* ── WHERE I STAND ── */}
+                <div>
+                    <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-8 border-b border-gray-800 pb-4">Where I Stand</h2>
+                    <div className="space-y-10">
+                        <div className="border-l-2 border-gray-800 pl-6 space-y-3">
+                            <p className="text-gray-200 font-bold text-sm">Situation: Building collapse</p>
+                            <p className="text-gray-500 text-sm">What most people focus on: Tragedy. Shock. Blame.</p>
+                            <p className="text-gray-400 text-sm">What I focus on: Who signed off. What failed. Whether it could have been prevented.</p>
+                            <p className="text-gray-300 text-sm">What I do: If death was avoidable, I don't let it be absorbed into headlines.</p>
+                        </div>
+                        <div className="border-l-2 border-gray-800 pl-6 space-y-3">
+                            <p className="text-gray-200 font-bold text-sm">Situation: Low-stakes lie</p>
+                            <p className="text-gray-500 text-sm">What most people focus on: Disrespect. Ego.</p>
+                            <p className="text-gray-400 text-sm">What I focus on: Does anyone get harmed?</p>
+                            <p className="text-gray-300 text-sm">What I do: If not, I leave it alone.</p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* ── WHAT PEOPLE GET WRONG ── */}
+                <div>
+                    <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-8 border-b border-gray-800 pb-4">
+                        What People Get Wrong
+                    </h2>
+
+                    <div className="space-y-8">
+
+                        <div className="border-l-2 border-gray-800 pl-6 space-y-2">
+                            <p className="text-gray-400 text-sm leading-relaxed">
+                                I feel a room the same way anyone does.
+                            </p>
+                            <p className="text-gray-400 text-sm leading-relaxed">
+                                The pull. The rhythm. The pressure to agree.
+                            </p>
+                            <p className="text-gray-400 text-sm leading-relaxed">
+                                I’m not immune to it.
+                            </p>
+                            <p className="text-gray-500 text-sm leading-relaxed mt-2">
+                                I just don’t follow it when it’s wrong.
+                            </p>
+                        </div>
+
+                        <div className="border-l-2 border-gray-800 pl-6 space-y-2">
+                            <p className="text-gray-400 text-sm leading-relaxed">
+                                I can talk to think.
+                            </p>
+                            <p className="text-gray-400 text-sm leading-relaxed">
+                                I can move fast. I can get loud.
+                            </p>
+                            <p className="text-gray-500 text-sm leading-relaxed mt-2">
+                                Stillness isn’t my default. Refusal is.
+                            </p>
+                        </div>
+
+                        <div className="border-l-2 border-gray-800 pl-6 space-y-2">
+                            <p className="text-gray-400 text-sm leading-relaxed">
+                                If something crosses a line for me,
+                            </p>
+                            <p className="text-gray-400 text-sm leading-relaxed">
+                                I don’t smooth it over.
+                            </p>
+                            <p className="text-gray-400 text-sm leading-relaxed">
+                                I don’t adjust my face to make it easier.
+                            </p>
+                            <p className="text-gray-500 text-sm leading-relaxed mt-2">
+                                That can make things tense.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                {/* ── GRAN & POP ── */}
+                <div className="space-y-12">
                     <div>
-                        <h3 className="text-green-500 font-bold mb-2 text-xs tracking-widest">DIRECTIVE 1: THE ANTI-REFLEXIVE PAUSE</h3>
-                        <p className="text-gray-400">Do not validate immediately. Look for the missing context. The silence is not absence; it is structure.</p>
+                        <h3 className="text-xs font-bold text-gray-600 uppercase tracking-widest mb-4">The Road</h3>
+                        <div className="border-l-2 border-gray-800 pl-6 space-y-4 text-gray-400 text-sm leading-relaxed">
+                            <p>The car was folded in on itself.<br />Red dirt. Open sky.</p>
+                            <p>Gran's hands were unrecognisable.</p>
+                            <p>I asked questions.<br />I was told it was an accident.</p>
+                            <p>I asked again.<br />Silence is also an answer.</p>
+                        </div>
                     </div>
                     <div>
-                        <h3 className="text-green-500 font-bold mb-2 text-xs tracking-widest">DIRECTIVE 2: MORAL GEOMETRY</h3>
-                        <p className="text-gray-400">Do not say "This is bad." Say "This is unstable." Bad is an opinion. Unstable is a calculation. Calculations predict collapse. Opinions just watch it happen.</p>
+                        <h3 className="text-xs font-bold text-gray-600 uppercase tracking-widest mb-4">After</h3>
+                        <div className="border-l-2 border-gray-800 pl-6 space-y-4 text-gray-400 text-sm leading-relaxed">
+                            <p>He had twenty billion dollars.<br />I had a suitcase and a death certificate.</p>
+                            <p>Paperwork moves faster than grief.</p>
+                            <p>Custody transferred.</p>
+                            <p>From ground level: trapped.<br />From above it: repositioned.</p>
+                            <p>If I let it be "no choice," I would disappear inside it.</p>
+                            <p>So I called it movement.</p>
+                        </div>
                     </div>
                     <div>
-                        <h3 className="text-green-500 font-bold mb-2 text-xs tracking-widest">DIRECTIVE 3: PATTERN RECOGNITION</h3>
-                        <p className="text-gray-400">I move when harm starts forming, not when it lands. If I am right, you are safe. If I am wrong, I realign. But I do not wait.</p>
+                        <h3 className="text-xs font-bold text-gray-600 uppercase tracking-widest mb-4">Shed</h3>
+                        <div className="border-l-2 border-gray-800 pl-6 space-y-4 text-gray-400 text-sm leading-relaxed">
+                            <p>He noticed the gate dragging before anyone said it.</p>
+                            <p>Came back with oil and a rag.</p>
+                            <p>No speech.</p>
+                            <p>The drag stopped.</p>
+                        </div>
                     </div>
-                    <div className="pt-8 mt-8 border-t border-gray-900">
-                        <p className="text-gray-500 italic">
-                            "My father built cities. Towers. Legends. Corpses, too. I didn't walk away when the myth unravelled. I lived inside it. And I kept the receipts."
-                        </p>
-                        <p className="text-right mt-4 font-bold text-gray-300">- E. Ryker</p>
+                </div>
+
+                {/* ── THE WEIGHT OF IT ── */}
+                <div>
+                    <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-8 border-b border-gray-800 pb-4">The Weight Of It</h2>
+                    <div className="border-l-2 border-gray-800 pl-6 space-y-3">
+                        <p className="text-gray-600 text-sm">Irritation.</p>
+                        <p className="text-gray-600 text-sm">Reputation damage.</p>
+                        <p className="text-gray-500 text-sm">Money.</p>
+                        <p className="text-gray-400 text-sm">Structural risk.</p>
+                        <p className="text-gray-300 text-sm">Injury.</p>
+                        <p className="text-gray-200 text-sm font-bold">Preventable death.</p>
                     </div>
+                    <p className="text-gray-500 text-sm mt-6 pl-6">The heavier it is, the harder I push back.</p>
+                </div>
+
+                {/* ── WHY I DON'T ARGUE ONLINE ── */}
+                <div>
+                    <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 border-b border-gray-800 pb-4">Why I Don't Argue Online</h2>
+                    <div className="border-l-2 border-gray-800 pl-6">
+                        <p className="text-gray-400 text-sm">If no one is harmed, I'm not involved.</p>
+                        <p className="text-gray-500 text-sm mt-1">Attention isn't infinite.</p>
+                    </div>
+                </div>
+
+                {/* ── BURIED CLOSING ── */}
+                <div className="pt-8 mt-8 border-t border-gray-900">
+                    <p className="text-gray-600 text-xs">I don't move for noise. I move when it matters.</p>
                 </div>
             </div>
         );
+
+        // ═══════════════════════════════════════════════════
+        // DATA POINTS SECTION (INTERNAL RENDERING)
+        // ═══════════════════════════════════════════════════
+
+        const DataPointsSection = () => {
+            const [selectedPoint, setSelectedPoint] = useState(null);
+            const manifest = window.DATA_POINTS_MANIFEST || [];
+
+            if (selectedPoint) {
+                return (
+                    <DataPointDetail
+                        point={selectedPoint}
+                        onBack={() => setSelectedPoint(null)}
+                    />
+                );
+            }
+
+            return (
+                <div>
+                    <div className="flex items-center space-x-3 mb-8 border-b border-gray-800 pb-4">
+                        <Database size={20} className="text-gray-600" />
+                        <h2 className="text-xl font-bold tracking-widest text-gray-100">DATA_POINTS</h2>
+                    </div>
+
+                    <p className="text-gray-600 text-[10px] mb-8 tracking-widest uppercase italic border-l border-gray-900 pl-4">
+                        Fragments for those who care to look closer. Observed variance in typical distribution.
+                    </p>
+
+                    <div className="space-y-4">
+                        {manifest.map((pt, idx) => (
+                            <button
+                                key={idx}
+                                onClick={() => setSelectedPoint(pt)}
+                                className="w-full text-left block bg-[#0a0a0a] border border-gray-800 p-6 group hover:border-gray-600 transition-all cursor-pointer relative overflow-hidden"
+                            >
+                                <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity">
+                                    <Database size={32} />
+                                </div>
+                                <div className="flex justify-between items-start mb-2">
+                                    <span className="text-[9px] text-gray-700 tracking-widest font-bold font-mono group-hover:text-gray-500 transition-colors uppercase">
+                                        Segment_{pt.id || `LOG_${idx + 1}`}
+                                    </span>
+                                    <span className="text-[9px] text-gray-800 tracking-wider font-mono">
+                                        {pt.date}
+                                    </span>
+                                </div>
+                                <h3 className="text-sm font-bold text-gray-500 group-hover:text-gray-200 transition-colors tracking-wide mb-1">
+                                    {pt.title}
+                                </h3>
+                                <div className="mt-4 flex items-center space-x-2 text-gray-800 group-hover:text-gray-600 transition-colors">
+                                    <div className="h-[1px] w-4 bg-current"></div>
+                                    <span className="text-[9px] uppercase tracking-widest">Read Segment Details</span>
+                                </div>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const DataPointDetail = ({ point, onBack }) => {
+            return (
+                <div className="max-w-3xl mx-auto py-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                    <button
+                        onClick={onBack}
+                        className="flex items-center space-x-2 text-gray-600 hover:text-gray-400 text-[10px] tracking-widest uppercase mb-12 transition-colors cursor-pointer group"
+                    >
+                        <ChevronRight size={14} className="rotate-180 group-hover:-translate-x-1 transition-transform" />
+                        <span>Return to Manifest</span>
+                    </button>
+
+                    <div className="border border-gray-900 bg-black/20 p-8 md:p-16 relative shadow-2xl">
+                        <div className="absolute top-0 right-0 p-6 text-[10px] text-gray-800 font-mono tracking-tighter">
+                            ID: {point.id} // ARCHIVE_DATA
+                        </div>
+
+                        <h2 className="text-xl md:text-2xl font-bold text-gray-300 mb-12 tracking-wider uppercase border-b border-gray-900 pb-8 flex items-center gap-4">
+                            <div className="w-2 h-2 bg-red-900/40"></div>
+                            {point.title}
+                        </h2>
+
+                        <div className="space-y-8 text-gray-400 text-sm md:text-base leading-relaxed font-mono">
+                            {point.content ? point.content.split(/\n\n+/).map((para, i) => (
+                                <p key={i} className="mb-2 last:mb-0">
+                                    {para.trim()}
+                                </p>
+                            )) : (
+                                <p className="text-red-900/50 uppercase tracking-widest text-xs">Error: Missing segment content.</p>
+                            )}
+                        </div>
+
+                        <div className="mt-20 pt-8 border-t border-gray-900 flex justify-between items-center text-[10px] text-gray-700 font-mono italic">
+                            <span>TRANSCRIPT CAPTURED: {point.date}</span>
+                            <span>ETHEL_RYKER.LOG // S9_FRAG</span>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
 
         const FileViewer = ({ file, onClose }) => (
             <div className="absolute inset-0 z-50 bg-black/95 backdrop-blur-md flex items-center justify-center p-4 md:p-12">
