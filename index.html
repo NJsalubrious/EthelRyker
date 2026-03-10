@@ -900,16 +900,19 @@ I monitor her signal. If it drops, I move.`
         root.render(<EthelRykerSite />);
     </script>
 
-    <!-- BACKGROUND AUDIO (YouTube IFrame API) -->
+    <!-- BACKGROUND AUDIO -->
     <script src="https://www.youtube.com/iframe_api"></script>
-    <!-- YouTube Player: 1x1px in viewport corner (mobile blocks off-screen iframes) -->
+    <!-- YouTube Player: 1x1px in viewport corner -->
     <div id="yt-bg-player"
         style="position:fixed;bottom:0;right:0;width:1px;height:1px;opacity:0.01;pointer-events:none;z-index:-1;"></div>
 
     <script>
+        // YouTube first (for view counts), Cloudflare MP3 failsafe (for blocked browsers)
+        const FALLBACK_MP3 = 'https://pub-111e813bd5634cd8a9ecdd3d5c2a0916.r2.dev/11.NormalEthelV1.mp3';
         let bgPlayer = null;
         let audioStarted = false;
         let playerReady = false;
+        let fallbackAudio = null;
 
         function onYouTubeIframeAPIReady() {
             bgPlayer = new YT.Player('yt-bg-player', {
@@ -934,16 +937,37 @@ I monitor her signal. If it drops, I move.`
             });
         }
 
+        function playFallbackMP3() {
+            if (fallbackAudio) return;
+            fallbackAudio = new Audio(FALLBACK_MP3);
+            fallbackAudio.volume = 0.3;
+            fallbackAudio.loop = true;
+            fallbackAudio.play().catch(function () { });
+        }
+
         function startBackgroundAudio() {
             if (audioStarted) return;
-            if (!playerReady || !bgPlayer || !bgPlayer.playVideo) return;
-            try {
-                bgPlayer.playVideo();
-                audioStarted = true;
-                ['click', 'touchend', 'keydown'].forEach(function (evt) {
-                    document.removeEventListener(evt, startBackgroundAudio);
-                });
-            } catch (e) { /* retry on next tap */ }
+            audioStarted = true;
+
+            ['click', 'touchend', 'keydown'].forEach(function (evt) {
+                document.removeEventListener(evt, startBackgroundAudio);
+            });
+
+            if (playerReady && bgPlayer && bgPlayer.playVideo) {
+                try {
+                    bgPlayer.playVideo();
+                    setTimeout(function () {
+                        try {
+                            var state = bgPlayer.getPlayerState();
+                            if (state !== 1) { playFallbackMP3(); }
+                        } catch (e) { playFallbackMP3(); }
+                    }, 4000);
+                } catch (e) {
+                    playFallbackMP3();
+                }
+            } else {
+                playFallbackMP3();
+            }
         }
 
         ['click', 'touchend', 'keydown'].forEach(function (evt) {
