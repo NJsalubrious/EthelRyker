@@ -900,38 +900,63 @@ I monitor her signal. If it drops, I move.`
         root.render(<EthelRykerSite />);
     </script>
 
-    <!-- BACKGROUND AUDIO -->
+    <!-- BACKGROUND AUDIO (Privacy-Enhanced) -->
     <script src="https://www.youtube.com/iframe_api"></script>
-    <!-- YouTube Player: 1x1px in viewport corner -->
     <div id="yt-bg-player"
         style="position:fixed;bottom:0;right:0;width:1px;height:1px;opacity:0.01;pointer-events:none;z-index:-1;"></div>
 
     <script>
-        // Desktop = YouTube (for view counts), Mobile = direct MP3 (reliable)
+        // Desktop = YouTube (privacy-enhanced, for view counts), Mobile = direct MP3
+        // Fallback: if YouTube fails or is blocked by privacy settings, MP3 kicks in
         const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1);
-        const MOBILE_MP3 = 'https://pub-111e813bd5634cd8a9ecdd3d5c2a0916.r2.dev/PixelStortionSongs/11.NormalEthelV1.mp3';
+        const FALLBACK_MP3 = 'https://pub-111e813bd5634cd8a9ecdd3d5c2a0916.r2.dev/PixelStortionSongs/11.NormalEthelV1.mp3';
         let audioStarted = false;
+        let mp3Fallback = null;
 
-        // --- DESKTOP: YouTube ---
+        // --- DESKTOP: YouTube (privacy-enhanced mode) ---
         let bgPlayer = null;
         let playerReady = false;
+        let ytPlaying = false;
 
         function onYouTubeIframeAPIReady() {
             if (isMobile) return;
-            bgPlayer = new YT.Player('yt-bg-player', {
-                videoId: 'OxHZnnRhtbk',
-                playerVars: {
-                    autoplay: 0, loop: 1, playlist: 'OxHZnnRhtbk',
-                    controls: 0, showinfo: 0, modestbranding: 1,
-                    playsinline: 1, rel: 0, origin: window.location.origin
-                },
-                events: {
-                    'onReady': function (event) {
-                        event.target.setVolume(30);
-                        playerReady = true;
+            try {
+                bgPlayer = new YT.Player('yt-bg-player', {
+                    host: 'https://www.youtube-nocookie.com',
+                    videoId: 'OxHZnnRhtbk',
+                    playerVars: {
+                        autoplay: 0, loop: 1, playlist: 'OxHZnnRhtbk',
+                        controls: 0, showinfo: 0, modestbranding: 1,
+                        playsinline: 1, rel: 0, origin: window.location.origin
+                    },
+                    events: {
+                        'onReady': function (event) {
+                            event.target.setVolume(30);
+                            playerReady = true;
+                        },
+                        'onStateChange': function (event) {
+                            if (event.data === YT.PlayerState.PLAYING) {
+                                ytPlaying = true;
+                            }
+                        },
+                        'onError': function () {
+                            // YouTube blocked or errored — use MP3 fallback
+                            playMP3Fallback();
+                        }
                     }
-                }
-            });
+                });
+            } catch (e) {
+                // YouTube API failed entirely
+                playerReady = false;
+            }
+        }
+
+        function playMP3Fallback() {
+            if (mp3Fallback) return; // Already playing
+            mp3Fallback = new Audio(FALLBACK_MP3);
+            mp3Fallback.volume = 0.3;
+            mp3Fallback.loop = true;
+            mp3Fallback.play().catch(function () { });
         }
 
         function startBackgroundAudio() {
@@ -942,13 +967,20 @@ I monitor her signal. If it drops, I move.`
             });
 
             if (isMobile) {
-                var audio = new Audio(MOBILE_MP3);
-                audio.volume = 0.3;
-                audio.loop = true;
-                audio.play().catch(function () { });
+                playMP3Fallback();
             } else {
+                // Try YouTube first
                 if (playerReady && bgPlayer && bgPlayer.playVideo) {
                     try { bgPlayer.playVideo(); } catch (e) { }
+                    // If YouTube doesn't start playing within 4 seconds, fall back to MP3
+                    setTimeout(function () {
+                        if (!ytPlaying) {
+                            playMP3Fallback();
+                        }
+                    }, 4000);
+                } else {
+                    // YouTube never initialized — go straight to MP3
+                    playMP3Fallback();
                 }
             }
         }
