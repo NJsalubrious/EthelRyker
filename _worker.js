@@ -1,30 +1,33 @@
 export default {
     async fetch(request, env) {
-        // 1. Fetch the static HTML directly from my Pages assets
         const response = await env.ASSETS.fetch(request);
-
-        // SAFETY CHECK: Only alter HTML. Never touch my complex CSS, JS, or Three.js/React!
         const contentType = response.headers.get("content-type");
         if (!contentType || !contentType.includes("text/html")) {
             return response;
         }
 
         try {
-            // 2. Pull the master brain from the database
             const kvData = await env.SITT_DAILY_TRENDS.get("current_ecosystem_payload");
-            if (!kvData) return response;
 
-            const payload = JSON.parse(kvData);
-
-            // 3. The Switchboard: Figure out which site the visitor is on
             const url = new URL(request.url);
             const hostname = url.hostname.toLowerCase();
             const pathname = url.pathname.toLowerCase();
 
+            // --- DEBUG INJECTION ---
+            // If KV data is missing, inject a comment so we know.
+            if (!kvData) {
+                return new HTMLRewriter()
+                    .on('head', {
+                        element(element) {
+                            element.append(``, { html: true });
+                        }
+                    })
+                    .transform(response);
+            }
+
+            const payload = JSON.parse(kvData);
             let targetNode = null;
 
-            // Route the traffic to the correct AI personality 
-            // (works for custom domains AND .pages.dev preview links)
             if (hostname.includes("ethelryker")) {
                 targetNode = "ethel";
             } else if (hostname.includes("dominicryker")) {
@@ -32,7 +35,6 @@ export default {
             } else if (hostname.includes("islaband")) {
                 targetNode = "isla";
             } else if (hostname.includes("pixelstortion")) {
-                // Path-based routing specifically for Pixelstortion
                 if (pathname.includes("/zones/silence")) {
                     targetNode = "silence";
                 } else {
@@ -40,8 +42,17 @@ export default {
                 }
             }
 
-            // If the database is missing that character, serve the normal page
-            if (!targetNode || !payload[targetNode]) return response;
+            // --- DEBUG INJECTION ---
+            // If we didn't find a matching node, inject a comment telling us what hostname it saw.
+            if (!targetNode || !payload[targetNode]) {
+                return new HTMLRewriter()
+                    .on('head', {
+                        element(element) {
+                            element.append(``, { html: true });
+                        }
+                    })
+                    .transform(response);
+            }
 
             const siteMeta = payload[targetNode];
 
@@ -49,6 +60,7 @@ export default {
             return new HTMLRewriter()
                 .on('head', {
                     element(element) {
+                        element.append(``, { html: true });
                         if (siteMeta.title) {
                             element.append(`<title>${siteMeta.title}</title>`, { html: true });
                             element.append(`<meta property="og:title" content="${siteMeta.title}">`, { html: true });
@@ -67,7 +79,15 @@ export default {
 
         } catch (err) {
             console.error("Worker error:", err);
-            return response; // Fail gracefully so the site never breaks
+            // --- DEBUG INJECTION ---
+            // If the code crashes, inject the error message into the HTML.
+            return new HTMLRewriter()
+                .on('head', {
+                    element(element) {
+                        element.append(``, { html: true });
+                    }
+                })
+                .transform(response);
         }
     }
 };
