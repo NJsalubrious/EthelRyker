@@ -11,7 +11,7 @@ That distortion isn't stupidity. It is preservation. But preservation of what? T
 
 I don’t lack attachment. I lack tolerance for distortion.
 
-I feel the pull of the room— Dopamine in the air. Mirror neurons firing. Collective regulation in motion. I am not immune to it.
+I feel the pull of the room. Dopamine in the air. Mirror neurons firing. Collective regulation in motion. I am not immune to it.
 
 But if the reaction is wrong, I don’t become the buffer. I don’t dilute the acid just so the group can stay comfortable. I observe the pH. And if it’s corrosive, I name it.
 
