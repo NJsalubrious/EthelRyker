@@ -30,7 +30,7 @@ Smoke is information. Ash is evidence. Learning requires visibility.
 
 Some act like I sit outside the charted garden. Yes. Outliers exist in every distribution. Not superior. Not broken. Just data points that don’t compress easily.
 
-Some calls it variance. Statistics calls it deviation. Nature calls it diversity of form.
+Some call it variance. Statistics calls it deviation. Nature calls it diversity of form.
 
 Some nervous systems regulate through harmony. Mine regulates through clarity. I feel discrepancy. Instinctively. Unresolved tension accumulates interest. And interest compounds.
 
