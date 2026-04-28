@@ -49,7 +49,7 @@ export default {
 
             let headInjected = false;
 
-            // 4. Inject the AI metadata — REPLACE, don't duplicate
+            // 4. Inject the AI metadata  REPLACE, don't duplicate
             return new HTMLRewriter()
                 // Remove existing dynamic SEO tags so we don't get stacked/duplicate tags
                 .on('title', {
@@ -60,10 +60,9 @@ export default {
                         const name = (el.getAttribute('name') || '').toLowerCase();
                         const prop = (el.getAttribute('property') || '').toLowerCase();
                         
-                        const removeList = ['description', 'twitter:title', 'twitter:description', 'keywords'];
-                        const removePropList = ['og:title', 'og:description'];
+                        const removeList = ['description', 'keywords'];
                         
-                        if (removeList.includes(name) || removePropList.includes(prop)) {
+                        if (removeList.includes(name)) {
                             el.remove();
                         }
                     }
