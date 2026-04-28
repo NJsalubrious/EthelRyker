@@ -58,7 +58,6 @@ export default {
                 .on('meta', {
                     element(el) {
                         const name = (el.getAttribute('name') || '').toLowerCase();
-                        const prop = (el.getAttribute('property') || '').toLowerCase();
                         
                         const removeList = ['description', 'keywords'];
                         
@@ -79,13 +78,9 @@ export default {
 
                         if (siteMeta.title) {
                             injectedHtml += `<title>${safeTitle}</title>\n`;
-                            injectedHtml += `<meta property="og:title" content="${safeTitle}">\n`;
-                            injectedHtml += `<meta name="twitter:title" content="${safeTitle}">\n`;
                         }
                         if (siteMeta.description) {
                             injectedHtml += `<meta name="description" content="${safeDesc}">\n`;
-                            injectedHtml += `<meta property="og:description" content="${safeDesc}">\n`;
-                            injectedHtml += `<meta name="twitter:description" content="${safeDesc}">\n`;
                         }
                         if (siteMeta.keywords && Array.isArray(siteMeta.keywords) && siteMeta.keywords.length > 0) {
                             const joinedKeywords = siteMeta.keywords.join(', ');
