@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Ethel Ryker's analytical commentary. Moral thermodynamics. Systemic failure. Evidence-first.">
+  <meta name="robots" content="noindex, nofollow"><!-- Remove when ready to go live -->
+  <title>The Lab — Ethel Ryker</title>
+  <link rel="canonical" href="https://ethelryker.com/EthelRyker_Engine/">
+  <style>
+    /* ── Design tokens ─────────────────────────────────────── */
+    :root {
+      --bg:          #0a0b0d;
+      --surface:     #111317;
+      --border:      #1e2129;
+      --accent:      #4a9eff;
+      --accent-dim:  #2a5a99;
+      --text:        #c8cdd6;
+      --text-muted:  #6b7380;
+      --text-strong: #e8ecf2;
+      --danger:      #ff4a4a;
+      --font-mono:   "JetBrains Mono", "Fira Code", "Courier New", monospace;
+      --font-sans:   "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --radius:      4px;
+      --transition:  0.18s ease;
+    }
+
+    /* ── Reset ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Base ──────────────────────────────────────────────── */
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── Header ────────────────────────────────────────────── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 11, 13, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+    }
+
+    .header-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+
+    .site-wordmark {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .site-wordmark .name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-strong);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .site-wordmark .subtitle {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+    }
+
+    .header-nav {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .header-nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color var(--transition);
+      letter-spacing: 0.02em;
+    }
+
+    .header-nav a:hover { color: var(--text); }
+
+    /* ── Hero ──────────────────────────────────────────────── */
+    .hero {
+      padding: 5rem 2rem 3rem;
+      max-width: 860px;
+      margin: 0 auto;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 300;
+      color: var(--text-strong);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+      font-weight: 400;
+    }
+
+    .hero-bio {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      max-width: 520px;
+      line-height: 1.65;
+    }
+
+    /* ── Pipeline Status ────────────────────────────────────── */
+    .pipeline-status {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+
+    .status-dot.offline { background: var(--text-muted); animation: none; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    .status-text { color: var(--text-muted); }
+    .status-text strong { color: var(--text); }
+
+    /* ── Post grid ─────────────────────────────────────────── */
+    .posts-section {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem 5rem;
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-label::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* Loading state */
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding: 4rem 0;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+
+    .loading-bar {
+      width: 120px;
+      height: 2px;
+      background: var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .loading-bar::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      transform: translateX(-100%);
+      animation: scan 1.4s ease-in-out infinite;
+    }
+
+    @keyframes scan {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* Empty state */
+    .empty-state {
+      padding: 4rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .empty-state .signal {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent-dim);
+      margin-top: 0.5rem;
+    }
+
+    /* Post cards */
+    .post-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .post-card {
+      display: block;
+      text-decoration: none;
+      padding: 1.75rem 0;
+      border-bottom: 1px solid var(--border);
+      transition: background var(--transition);
+      position: relative;
+    }
+
+    .post-card:first-child { border-top: 1px solid var(--border); }
+
+    .post-card::before {
+      content: "";
+      position: absolute;
+      left: -2rem;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--accent);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform var(--transition);
+    }
+
+    .post-card:hover::before { transform: scaleY(1); }
+
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .post-date {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .post-badge {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      padding: 0.15em 0.5em;
+      border-radius: 2px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .post-badge.verified {
+      background: rgba(74, 158, 255, 0.1);
+      color: var(--accent);
+      border: 1px solid var(--accent-dim);
+    }
+
+    .post-badge.flagged {
+      background: rgba(255, 74, 74, 0.08);
+      color: var(--danger);
+      border: 1px solid rgba(255, 74, 74, 0.25);
+    }
+
+    .post-title {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--text-strong);
+      line-height: 1.35;
+      margin-bottom: 0.5rem;
+      transition: color var(--transition);
+    }
+
+    .post-card:hover .post-title { color: var(--accent); }
+
+    .post-excerpt {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 620px;
+    }
+
+    .post-footer-row {
+      margin-top: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .read-link {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent-dim);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color var(--transition);
+    }
+
+    .post-card:hover .read-link { color: var(--accent); }
+
+    .word-count {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Error state ────────────────────────────────────────── */
+    .error-state {
+      padding: 3rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--danger);
+    }
+
+    /* ── Footer ────────────────────────────────────────────── */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .site-footer p {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    .site-footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+
+    .site-footer a:hover { color: var(--accent); }
+
+    /* ── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .hero { padding: 3rem 1.25rem 2rem; }
+      .posts-section { padding: 2rem 1.25rem 4rem; }
+      .pipeline-status { padding: 1.25rem; }
+      .site-footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Header ── -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="site-wordmark">
+        <span class="name">Ethel Ryker</span>
+        <span class="subtitle">// the lab</span>
+      </div>
+      <nav class="header-nav">
+        <a href="https://ethelryker.com">← Main Site</a>
+        <a href="#posts">Posts</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <p class="hero-label">// daily dispatch · autonomous analysis</p>
+    <h1>Moral thermodynamics.<br>Applied to <em>today's</em> data.</h1>
+    <p class="hero-bio">
+      Automated daily commentary. Live news verified, processed through a five-node expert council,
+      and written in Ethel's voice. Fact-checked. Staccato. No affective display.
+      Entropy increases without intervention.
+    </p>
+  </section>
+
+  <!-- ── Pipeline Status ── -->
+  <div class="pipeline-status">
+    <div class="status-bar">
+      <div class="status-dot" id="status-dot"></div>
+      <span class="status-text" id="status-text">
+        <strong>Checking pipeline status…</strong>
+      </span>
+    </div>
+  </div>
+
+  <!-- ── Posts ── -->
+  <main class="posts-section" id="posts">
+    <div class="section-label">Dispatches</div>
+
+    <div id="posts-container">
+      <div class="loading">
+        <div class="loading-bar"></div>
+        <span>fetching dispatches…</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer class="site-footer">
+    <p>
+      <a href="https://ethelryker.com">ethelryker.com</a> ·
+      Silence is the Trauma
+    </p>
+    <p>Pipeline runs daily · Posts reviewed before publication</p>
+  </footer>
+
+  <script>
+    // ── Configuration ──────────────────────────────────────────
+    const MANIFEST_URL = './posts.json';
+
+    // ── DOM refs ───────────────────────────────────────────────
+    const container  = document.getElementById('posts-container');
+    const statusDot  = document.getElementById('status-dot');
+    const statusText = document.getElementById('status-text');
+
+    // ── Utilities ──────────────────────────────────────────────
+    function formatDate(isoString) {
+      const d = new Date(isoString);
+      if (isNaN(d)) return isoString;
+      return d.toLocaleDateString('en-AU', {
+        day:   'numeric',
+        month: 'long',
+        year:  'numeric',
+      });
+    }
+
+    function escapeHtml(str) {
+      return (str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // ── Render post list ───────────────────────────────────────
+    function renderPosts(posts) {
+      if (!posts || posts.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <p>No dispatches yet.</p>
+            <p class="signal">// pipeline initialising — first post incoming</p>
+          </div>`;
+        return;
+      }
+
+      const cards = posts.map(post => {
+        const badge = post.drift_passed === false
+          ? `<span class="post-badge flagged">Review Pending</span>`
+          : `<span class="post-badge verified">Fact-Checked</span>`;
+
+        const wc = post.word_count
+          ? `<span class="word-count">${post.word_count} words</span>`
+          : '';
+
+        return `
+          <a class="post-card" href="${escapeHtml(post.url)}">
+            <div class="post-meta">
+              <time class="post-date" datetime="${escapeHtml(post.date)}">
+                ${formatDate(post.date)}
+              </time>
+              ${badge}
+            </div>
+            <h2 class="post-title">${escapeHtml(post.title)}</h2>
+            <p class="post-excerpt">${escapeHtml(post.excerpt || '')}</p>
+            <div class="post-footer-row">
+              <span class="read-link">Read dispatch →</span>
+              ${wc}
+            </div>
+          </a>`;
+      }).join('');
+
+      container.innerHTML = `<div class="post-list">${cards}</div>`;
+    }
+
+    // ── Update status bar ──────────────────────────────────────
+    function setStatus(posts) {
+      if (!posts) {
+        statusDot.classList.add('offline');
+        statusText.innerHTML = '<strong>Pipeline offline</strong> — no manifest found';
+        return;
+      }
+      const latest = posts[0];
+      const date   = latest ? formatDate(latest.date) : '—';
+      statusDot.classList.remove('offline');
+      statusText.innerHTML =
+        `Pipeline active · Last dispatch: <strong>${date}</strong> · ` +
+        `${posts.length} post${posts.length !== 1 ? 's' : ''} published`;
+    }
+
+    // ── Fetch and render ───────────────────────────────────────
+    async function loadPosts() {
+      try {
+        const resp = await fetch(MANIFEST_URL + '?v=' + Date.now());
+
+        if (!resp.ok) {
+          if (resp.status === 404) {
+            // No posts yet — pipeline hasn't run
+            renderPosts([]);
+            setStatus([]);
+            return;
+          }
+          throw new Error(`HTTP ${resp.status}`);
+        }
+
+        const posts = await resp.json();
+        renderPosts(posts);
+        setStatus(posts);
+
+      } catch (err) {
+        console.error('Failed to load posts:', err);
+        statusDot.classList.add('offline');
+        statusText.innerHTML = `<strong>Error loading posts</strong> — ${err.message}`;
+        container.innerHTML = `
+          <div class="error-state">
+            // manifest fetch failed: ${err.message}<br>
+            // posts.json may not exist yet
+          </div>`;
+      }
+    }
+
+    // ── Init ───────────────────────────────────────────────────
+    loadPosts();
+  </script>
+
+</body>
+</html>
