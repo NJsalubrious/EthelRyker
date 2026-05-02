@@ -313,6 +313,12 @@
       border: 1px solid rgba(255, 74, 74, 0.25);
     }
 
+    .post-badge.draft-clean {
+      background: rgba(74, 255, 150, 0.08);
+      color: #4aff96;
+      border: 1px solid rgba(74, 255, 150, 0.25);
+    }
+
     .post-title {
       font-size: 1.1rem;
       font-weight: 500;
@@ -436,7 +442,10 @@
 
   <!-- ── Posts ── -->
   <main class="posts-section" id="posts">
-    <div class="section-label">Dispatches</div>
+    <div class="section-label" id="drafts-label" style="display: none;">Pending Review</div>
+    <div id="drafts-container" style="margin-bottom: 4rem;"></div>
+
+    <div class="section-label">Published Dispatches</div>
 
     <div id="posts-container">
       <div class="loading">
@@ -458,9 +467,12 @@
   <script>
     // ── Configuration ──────────────────────────────────────────
     const MANIFEST_URL = './posts.json';
+    const DRAFTS_MANIFEST_URL = 'https://raw.githubusercontent.com/NJsalubrious/EthelRyker/ethel-drafts/EthelRyker_Engine/drafts/draft_reviews.json';
 
     // ── DOM refs ───────────────────────────────────────────────
     const container  = document.getElementById('posts-container');
+    const draftsContainer = document.getElementById('drafts-container');
+    const draftsLabel = document.getElementById('drafts-label');
     const statusDot  = document.getElementById('status-dot');
     const statusText = document.getElementById('status-text');
 
@@ -523,39 +535,90 @@
       container.innerHTML = `<div class="post-list">${cards}</div>`;
     }
 
+    // ── Render drafts list ─────────────────────────────────────
+    function renderDrafts(drafts) {
+      if (!drafts || drafts.length === 0) {
+        draftsLabel.style.display = 'none';
+        draftsContainer.innerHTML = '';
+        return;
+      }
+
+      draftsLabel.style.display = 'flex';
+
+      const cards = drafts.map(draft => {
+        const badge = !draft.drift_passed
+          ? `<span class="post-badge flagged">${draft.flagged_count} Flagged</span>`
+          : `<span class="post-badge draft-clean">Clean Review</span>`;
+
+        return `
+          <a class="post-card" href="${escapeHtml(draft.url)}" target="_blank" rel="noopener noreferrer">
+            <div class="post-meta">
+              <time class="post-date" datetime="${escapeHtml(draft.date)}">
+                ${formatDate(draft.date)}
+              </time>
+              ${badge}
+            </div>
+            <h2 class="post-title">${escapeHtml(draft.title)}</h2>
+            <p class="post-excerpt">Waiting for manual review and publication. Contains ${draft.card_count} observations.</p>
+            <div class="post-footer-row">
+              <span class="read-link">Review Drafts →</span>
+              <span class="word-count">${draft.card_count} cards</span>
+            </div>
+          </a>`;
+      }).join('');
+
+      draftsContainer.innerHTML = `<div class="post-list">${cards}</div>`;
+    }
+
     // ── Update status bar ──────────────────────────────────────
-    function setStatus(posts) {
-      if (!posts) {
+    function setStatus(posts, draftsCount) {
+      if (!posts && draftsCount === 0) {
         statusDot.classList.add('offline');
         statusText.innerHTML = '<strong>Pipeline offline</strong> — no manifest found';
         return;
       }
-      const latest = posts[0];
-      const date   = latest ? formatDate(latest.date) : '—';
+      
+      const latest = posts && posts.length > 0 ? formatDate(posts[0].date) : '—';
+      const draftsText = draftsCount > 0 ? ` · <strong style="color: var(--accent);">${draftsCount} pending review</strong>` : '';
+      const publishedText = posts ? `${posts.length} post${posts.length !== 1 ? 's' : ''} published` : '0 posts published';
+      
       statusDot.classList.remove('offline');
       statusText.innerHTML =
-        `Pipeline active · Last dispatch: <strong>${date}</strong> · ` +
-        `${posts.length} post${posts.length !== 1 ? 's' : ''} published`;
+        `Pipeline active · Last dispatch: <strong>${latest}</strong> · ${publishedText}${draftsText}`;
     }
 
     // ── Fetch and render ───────────────────────────────────────
-    async function loadPosts() {
+    let globalPosts = null;
+    let globalDrafts = [];
+
+    async function loadData() {
+      // 1. Fetch Drafts
+      try {
+        const draftResp = await fetch(DRAFTS_MANIFEST_URL + '?v=' + Date.now());
+        if (draftResp.ok) {
+          globalDrafts = await draftResp.json();
+        }
+      } catch (err) {
+        console.warn('Draft manifest fetch failed or does not exist yet:', err);
+      }
+      renderDrafts(globalDrafts);
+
+      // 2. Fetch Posts
       try {
         const resp = await fetch(MANIFEST_URL + '?v=' + Date.now());
 
         if (!resp.ok) {
           if (resp.status === 404) {
-            // No posts yet — pipeline hasn't run
             renderPosts([]);
-            setStatus([]);
+            setStatus([], globalDrafts.length);
             return;
           }
           throw new Error(`HTTP ${resp.status}`);
         }
 
-        const posts = await resp.json();
-        renderPosts(posts);
-        setStatus(posts);
+        globalPosts = await resp.json();
+        renderPosts(globalPosts);
+        setStatus(globalPosts, globalDrafts.length);
 
       } catch (err) {
         console.error('Failed to load posts:', err);
@@ -570,7 +633,7 @@
     }
 
     // ── Init ───────────────────────────────────────────────────
-    loadPosts();
+    loadData();
   </script>
 
 </body>
