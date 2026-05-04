@@ -145,9 +145,7 @@
         }
 
         /* ====== BRAND DROPDOWN ====== */
-        .brand-dropdown-container {
-            position: relative;
-        }
+        .brand-dropdown-container { position: relative; min-width: 160px; }
 
         .brand-dropdown-menu {
             position: absolute;
@@ -403,9 +401,9 @@
         // ═══════════════════════════════════════════════════
 
         const EthelRykerSite = () => {
-            const [activeSector, setActiveSector] = useState('DATA_POINTS');
+            const [activeSector, setActiveSector] = useState('STATUS');
             const [currentTime, setCurrentTime] = useState('');
-            const [bootSequence, setBootSequence] = useState(true);
+            const [bootSequence, setBootSequence] = useState(false);
             const [securityLevel] = useState('ELEVATED');
             const [selectedFile, setSelectedFile] = useState(null);
 
@@ -415,8 +413,7 @@
                     const now = new Date();
                     setCurrentTime(now.toISOString().replace('T', ' ').substring(0, 19));
                 }, 1000);
-                const bootTimer = setTimeout(() => setBootSequence(false), 2500);
-                return () => { clearInterval(timer); clearTimeout(bootTimer); };
+                return () => clearInterval(timer);
             }, []);
 
             // ─── DATA ARCHIVES ───
@@ -603,40 +600,12 @@ I monitor her signal. If it drops, I move.`
                                     </button>
                                     <div id="brandDropdown" className="brand-dropdown-menu" onClick={(e) => e.stopPropagation()}>
                                         <a href="https://silenceisthetrauma.com/veX_social_network/" className="brand-dropdown-item" style={{borderBottom: '1px solid #222', marginBottom: '4px'}}>veX: Social Network</a>
+                                        <a href="https://pixelstortion.com/zones/silence/" className="brand-dropdown-item" style={{borderBottom: '1px solid #222', marginBottom: '4px'}}>Silence is the trauma</a>
+                                        <a href="https://islaband.com/" className="brand-dropdown-item" style={{borderBottom: '1px solid #222', marginBottom: '4px'}}>Isla</a>
+                                        <span className="brand-dropdown-item" style={{borderBottom: '1px solid #222', marginBottom: '4px', opacity: 0.5, cursor: 'default', pointerEvents: 'none'}}>Ethel Ryker</span>
+                                        <a href="https://dominicryker.com/" className="brand-dropdown-item" style={{borderBottom: '1px solid #222', marginBottom: '4px'}}>Dominic Ryker</a>
+                                        <a href="https://pixelstortion.com/zones/mataala/" className="brand-dropdown-item" style={{borderBottom: '1px solid #222', marginBottom: '4px'}}>Nalani</a>
                                         <a href="https://pixelstortion.com/bio/" className="brand-dropdown-item" style={{borderBottom: '1px solid #222', marginBottom: '4px'}}>BIO</a>
-                                        
-                                        <div className="menu-category-wrapper">
-                                            <div className="menu-category" style={{cursor:'default'}}>Silence is the trauma : <span style={{opacity:0.5}}>&#x25B8;</span></div>
-                                            <div className="submenu">
-                                                <a href="https://pixelstortion.com/zones/silence/" className="brand-dropdown-item">Main Site</a>
-                                                
-                                                <div className="menu-category-wrapper">
-                                                    <div className="menu-category" style={{cursor:'default', fontSize:'11px', padding:'8px 16px', background:'rgba(0,0,0,0.5)', borderBottom:'1px solid #222'}}>Isla : <span style={{opacity:0.5}}>&#x25B8;</span></div>
-                                                    <div className="submenu" style={{left:'100%', top:0, marginLeft:'2px'}}>
-                                                        <a href="https://islaband.com" className="brand-dropdown-item">Music Site</a>
-                                                        <a href="https://islaband.com/ISLA_ALBUM" className="brand-dropdown-item">Isla ear splitting</a>
-                                                    </div>
-                                                </div>
-                                                
-                                                <a href="https://ethelryker.com" className="brand-dropdown-item">Ethel Ryker : Blog</a>
-                                                <a href="https://dominicryker.com" className="brand-dropdown-item">Dominic Ryker : Structure</a>
-                                                
-                                                <div className="menu-category-wrapper">
-                                                    <div className="menu-category" style={{cursor:'default', fontSize:'11px', padding:'8px 16px', background:'rgba(0,0,0,0.5)', borderBottom:'1px solid #222'}}>ART : <span style={{opacity:0.5}}>&#x25B8;</span></div>
-                                                    <div className="submenu" style={{left:'100%', top:0, marginLeft:'2px'}}>
-                                                        <a href="https://pixelstortion.com/zones/silentcinema/" className="brand-dropdown-item">Cinema</a>
-                                                        <a href="https://pixelstortion.com/zones/ethel_gallery/" className="brand-dropdown-item">Poetry</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div className="menu-category-wrapper">
-                                            <div className="menu-category" style={{cursor:'default'}}>Nalani : <span style={{opacity:0.5}}>&#x25B8;</span></div>
-                                            <div className="submenu">
-                                                <a href="https://pixelstortion.com/zones/mataala/" className="brand-dropdown-item">Mataala</a>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                                 <h1 className="text-gray-100 font-bold tracking-widest text-lg" style={{ lineHeight: 1 }}>ETHEL_RYKER<span className="text-gray-600">.LOG</span></h1>
@@ -1359,3 +1328,4 @@ I monitor her signal. If it drops, I move.`
 </body>
 
 </html>
+
