@@ -21,7 +21,7 @@ There is no genius in total self-interest. It is the easiest, lowest reflex we h
 
 They write about the "prime mover." The indispensable man. But I watch the rhythm of the people who worship this idea. I watch how they move through a room.
 
-They don't build. They extract. They manufacture dependencies and call it leadership. They engineer silence, then mistake that silence for respect. They take the loyalty, the sweat, the quiet sacrifices of the people who actually keep the lights on, and they fold it into their own pockets.
+They don't build. They extract. They manufacture dependencies and call it leadership. They engineer silence, then mistake that silence for respect. They take the loyalty, the sweat, the quiet sacrifices of the people who actually keep the lights on, and they place it neatly into their own pockets.
 
 And the cruelest trick? The absolute masterpiece of the theft?
 
