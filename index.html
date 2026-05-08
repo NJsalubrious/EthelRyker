@@ -401,7 +401,10 @@
         // ═══════════════════════════════════════════════════
 
         const EthelRykerSite = () => {
-            const [activeSector, setActiveSector] = useState('STATUS');
+            const [activeSector, setActiveSector] = useState(() => {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.has('post') ? 'DATA_POINTS' : 'STATUS';
+            });
             const [currentTime, setCurrentTime] = useState('');
             const [bootSequence, setBootSequence] = useState(false);
             const [securityLevel] = useState('ELEVATED');
@@ -974,7 +977,10 @@ I monitor her signal. If it drops, I move.`
 
         const DataPointsSection = () => {
             const manifest = window.DATA_POINTS_MANIFEST || [];
-            const [selectedPoint, setSelectedPoint] = useState(null);
+            const urlParams = new URLSearchParams(window.location.search);
+            const initialPostId = urlParams.get('post');
+            const initialPost = initialPostId ? manifest.find(p => p.id === initialPostId) : null;
+            const [selectedPoint, setSelectedPoint] = useState(initialPost);
 
             if (selectedPoint) {
                 return (
