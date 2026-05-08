@@ -974,7 +974,7 @@ I monitor her signal. If it drops, I move.`
 
         const DataPointsSection = () => {
             const manifest = window.DATA_POINTS_MANIFEST || [];
-            const [selectedPoint, setSelectedPoint] = useState(manifest.length > 0 ? manifest[0] : null);
+            const [selectedPoint, setSelectedPoint] = useState(null);
 
             if (selectedPoint) {
                 return (
