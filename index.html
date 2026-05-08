@@ -639,7 +639,12 @@ I monitor her signal. If it drops, I move.`
                                 <NavButton active={activeSector === 'DOMINIC'} onClick={() => setActiveSector('DOMINIC')} icon={<Lock size={18} />} label="SUB_DOMINIC" alert={true} />
                                 <NavButton active={activeSector === 'ISLA'} onClick={() => setActiveSector('ISLA')} icon={<Radio size={18} />} label="SUB_ISLA" />
                                 <NavButton active={activeSector === 'WHERE_I_STAND'} onClick={() => setActiveSector('WHERE_I_STAND')} icon={<FileText size={18} />} label="WHERE_I_STAND" />
-                                <NavButton active={activeSector === 'DATA_POINTS'} onClick={() => setActiveSector('DATA_POINTS')} icon={<Database size={18} />} label="DATA_POINTS" />
+                                <NavButton active={activeSector === 'DATA_POINTS'} onClick={() => {
+                                    if (activeSector === 'DATA_POINTS') {
+                                        window.dispatchEvent(new Event('resetDataPoints'));
+                                    }
+                                    setActiveSector('DATA_POINTS');
+                                }} icon={<Database size={18} />} label="DATA_POINTS" />
                             </div>
                             <div className="p-4 border-t border-gray-800 text-[10px] text-gray-600 hidden md:block">
                                 <p>ENCRYPTION: AES-256</p>
@@ -981,6 +986,12 @@ I monitor her signal. If it drops, I move.`
             const initialPostId = urlParams.get('post');
             const initialPost = initialPostId ? manifest.find(p => p.id === initialPostId) : null;
             const [selectedPoint, setSelectedPoint] = useState(initialPost);
+
+            useEffect(() => {
+                const handleReset = () => setSelectedPoint(null);
+                window.addEventListener('resetDataPoints', handleReset);
+                return () => window.removeEventListener('resetDataPoints', handleReset);
+            }, []);
 
             if (selectedPoint) {
                 return (
