@@ -5,7 +5,7 @@ They hand you the thick spine. Nine hundred pages. They call it a manifesto of t
 
 I look at the cover. A lot of paper to justify taking what isn't yours.
 
-People read it and their posture changes. They lift their chins. They adopt the vocabulary. They start dividing the room into makers and takers. The giants who carry the sky and the parasites who drag them down. It sounds clean. It sounds like an order you can rely on.
+People read it and their posture changes. They lift their chins. They adopt the vocabulary. They start dividing the room into makers and takers. The giants who carry the sky and the parasites who drag them down. It sounds like clarity. It sounds like an order you can rely on.
 
 But look at who actually holds the book. Look at who claims the title of the giant.
 
@@ -31,9 +31,7 @@ I know what a room feels like when it is run by someone who owes nothing to anyo
 
 True strength does not require the floor to be littered with broken people. True capability does not need to amputate its own conscience to survive the morning.
 
-I look past their speeches. I look at the foundation. I see the invisible scaffolding. The people who took the hits. The ones who compromised their own breath to keep the air clear for the 'hero'.
-
-I refuse the premise.
+I look past their speeches. I look at the foundation. I see the invisible scaffolding. The people who took the hits.
 
 I will not look at a predator and call him an innovator. I will not look at a quiet, devastating theft and call it liberty. I will not applaud a man who stands on a pile of ash and expects a medal for striking the match.
 
