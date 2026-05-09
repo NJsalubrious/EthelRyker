@@ -1068,7 +1068,7 @@ I monitor her signal. If it drops, I move.`
                         </h2>
 
                         <div className="space-y-8 text-gray-400 text-sm md:text-base leading-relaxed font-mono">
-                            {point.content ? point.content.split(/\n\n+/).map((para, i) => (
+                            {point.content ? point.content.split(/(?:\r?\n){2,}/).map((para, i) => (
                                 <p key={i} className="mb-2 last:mb-0">
                                     {para.trim()}
                                 </p>
