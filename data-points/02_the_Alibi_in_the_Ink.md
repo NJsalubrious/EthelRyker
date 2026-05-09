@@ -1,6 +1,8 @@
 
 TITLE: The Alibi in the Ink
 
+The work of Ayn Rand is a philosophy for predators. 
+
 They hand you the thick spine. Nine hundred pages. They call it a manifesto of the capable. A roadmap for the strong.
 
 I look at the cover. A lot of paper to justify taking what isn't yours.
