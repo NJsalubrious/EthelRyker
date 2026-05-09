@@ -17,7 +17,7 @@ This isn't a philosophy. It is an alibi.
 
 They call it the virtue of selfishness. A mandate to live entirely for oneself, owing nothing, giving nothing, feeling nothing for the bodies that pile up outside the gate. They dress it up as intellectual supremacy. They frame empathy as a defect. A chain wrapped around the ankles of the great.
 
-To believe that, you have to go blind. You have to walk past a shattered window and blame the cold on the people shivering inside. You have to watch a structure collapse and congratulate yourself for standing out of the way.
+To believe that, you have to be blind. You have to walk past a shattered window and blame the cold on the people shivering inside. You have to watch a structure collapse and congratulate yourself for standing out of the way.
 
 There is no genius in total self-interest. It is the easiest, lowest reflex we have. It requires no courage to look at another person's ruin and decide it has nothing to do with you. A child knows how to snatch a toy and turn their back. We are supposed to outgrow the impulse. This book just gives adults permission to call that regression a triumph.
 
