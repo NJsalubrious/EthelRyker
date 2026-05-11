@@ -7,7 +7,7 @@ They hand you the thick spine. Nine hundred pages. They call it a manifesto of t
 
 I look at the cover. A lot of paper to justify taking what isn't yours.
 
-People read it and their posture changes. They lift their chins. They adopt the vocabulary. They start dividing the room into makers and takers. The giants who carry the sky and the parasites who drag them down. It sounds like clarity. It sounds like an order you can rely on.
+People read it and their posture changes. They lift their chins. They adopt the vocabulary. They start dividing the room into makers and takers. The giants who carry the sky and the parasites who drag them down. It sounds like an order you can rely on.
 
 But look at who actually holds the book. Look at who claims the title of the giant.
 
