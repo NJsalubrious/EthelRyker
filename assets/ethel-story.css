@@ -1,0 +1,42 @@
+.ethel-story{padding:16px 0 48px;color:#d5cabc}
+.story-heading{max-width:760px;margin:0 auto 65px}
+.story-heading h2{font:normal clamp(46px,6vw,84px)/1.06 Georgia,serif;letter-spacing:-.035em;color:#eae4d8;margin:24px 0 30px}
+.story-intro{font:23px/1.55 Georgia,serif;max-width:630px;color:#c9b49e}
+.story-prose{max-width:670px;margin:auto;font:18px/1.85 'DM Sans',sans-serif}
+.story-prose section{margin-bottom:54px}
+.story-prose h3{font:12px/1.6 'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.14em;color:#d2a078;margin-bottom:24px}
+.story-prose p{margin:0 0 22px}
+.story-photo{margin:0 0 62px}
+.story-photo img{display:block;width:100%;height:auto;border:1px solid #ffffff18}
+.story-photo figcaption{font:11px/1.6 'JetBrains Mono',monospace;color:#b5a591;margin-top:13px}
+.story-archive{border-top:1px solid #d2a07855;padding-top:22px;margin-top:65px}
+.story-next{border-top:1px solid #d2a07855;padding-top:30px;margin-top:55px}
+.story-next button{color:#d2a078;border-bottom:1px solid #d2a07888;padding:8px 0;cursor:pointer;font-size:15px}
+.story-archive summary{cursor:pointer;color:#d2a078;font-size:14px;padding:10px 0}
+.story-archive>div{margin-top:30px;font-size:14px;line-height:1.6}
+.story-archive summary:focus-visible{outline:2px solid #d2a078;outline-offset:4px}
+.writing-list{max-width:800px;margin:30px auto}
+.writing-list button{background:transparent!important;border:0;border-top:1px solid #d2a07855;padding:32px 0!important}
+.writing-list button h3{font:normal clamp(25px,3vw,38px)/1.25 Georgia,serif;color:#eae4d8;letter-spacing:0}
+.writing-list button>div:first-child{display:none}
+.writing-list button>div:nth-child(2){color:#baaa95}
+.writing-list button>div:nth-child(2)>span:first-child{display:none}
+.writing-list button>div:last-child{color:#d2a078}
+.writing-essay>div{background:transparent!important;border:0;box-shadow:none!important;padding:20px 0!important}
+.writing-essay h2{font:normal clamp(32px,4vw,52px)/1.2 Georgia,serif!important;text-transform:none;letter-spacing:-.02em;color:#eae4d8;padding-bottom:28px}
+.writing-essay h2>div,.writing-essay>div>div:first-child{display:none}
+.writing-essay>div>div.space-y-8{font:18px/1.85 'DM Sans',sans-serif!important;color:#d5cabc;max-width:670px;margin:auto}
+.writing-essay>button{color:#d2a078;min-height:44px}
+.writing-essay .blog-subheading{font:normal 28px/1.3 Georgia,serif;color:#eae4d8;margin-top:42px}
+.writing-list.blog-cover-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;max-width:1200px;margin:30px auto 60px}
+.writing-list.blog-cover-grid .blog-cover-card{display:flex;flex-direction:column;align-items:stretch;text-align:left;padding:0 0 24px!important;border:0;border-bottom:1px solid #d2a07855;background:transparent;cursor:pointer}
+.blog-cover-image{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:contain;background:#171712;transition:filter .2s;box-shadow:0 8px 24px #0003}
+.writing-list.blog-cover-grid h3{font:normal clamp(23px,2.5vw,32px)/1.2 Georgia,serif;margin:22px 0 12px;color:#eae4d8}
+.blog-cover-date{font:11px/1.5 monospace;color:#b9aa95;margin-bottom:16px}
+.blog-cover-read{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:16px;font:11px/1.5 monospace;text-transform:uppercase;letter-spacing:.12em;color:#d2a078}
+.blog-cover-read>span{font-size:20px}
+.blog-cover-card:hover .blog-cover-image,.blog-cover-card:focus-visible .blog-cover-image{filter:brightness(1.08)}
+@media(max-width:900px){.writing-list.blog-cover-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}}
+@media(max-width:560px){.writing-list.blog-cover-grid{grid-template-columns:1fr;gap:36px;max-width:420px}.writing-list.blog-cover-grid h3{font-size:28px}}
+@media(prefers-reduced-motion:reduce){.blog-cover-image{transition:none}}
+@media(max-width:767px){.story-heading{margin-bottom:40px}.story-intro{font-size:21px}.story-prose{font-size:17px;line-height:1.8}.story-prose section{margin-bottom:42px}.story-photo{margin-bottom:40px}}

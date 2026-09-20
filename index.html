@@ -90,6 +90,7 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone@7.26.10/babel.min.js"></script>
     <script src="data-points/manifest.js"></script>
+    <script src="assets/ethel-blog-posts.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
 
@@ -337,9 +338,14 @@
 
 </style>
     <link rel="canonical" href="https://ethelryker.com/" />
+<link rel="stylesheet" href="assets/ethel-options.css"/>
+<link rel="stylesheet" href="assets/ethel-story.css"/>
+<link rel="stylesheet" href="assets/ethel-songs.css"/>
+<link rel="stylesheet" href="assets/ethel-nodes.css"/>
+<script src="assets/ethel-nodes-data.js"></script>
 </head>
 
-<body class="scanlines">
+<body class="ethel-option option-ride">
     <div id="root"></div>
 
     <script type="text/babel" data-type="module">
@@ -425,7 +431,7 @@
         const EthelRykerSite = () => {
             const [activeSector, setActiveSector] = useState(() => {
                 const urlParams = new URLSearchParams(window.location.search);
-                return urlParams.has('post') ? 'DATA_POINTS' : 'STATUS';
+                return urlParams.has('post') ? 'DATA_POINTS' : 'INTRO';
             });
             const [currentTime, setCurrentTime] = useState('');
             const [bootSequence, setBootSequence] = useState(false);
@@ -612,10 +618,10 @@ I monitor her signal. If it drops, I move.`
 
             // ─── MAIN UI ───
             return (
-                <div className="min-h-screen bg-[#050505] text-gray-400 font-mono text-sm overflow-hidden flex flex-col">
+                <div className="ethel-shell min-h-screen bg-[#050505] text-gray-400 font-mono text-sm overflow-hidden flex flex-col">
 
                     {/* HEADER */}
-                    <header className="h-14 border-b border-gray-800 bg-[#0a0a0a] flex items-center justify-between px-6 z-20 flex-shrink-0">
+                    <header className="ethel-header h-14 border-b border-gray-800 bg-[#0a0a0a] flex items-center justify-between px-6 z-20 flex-shrink-0">
                         <div className="flex items-center space-x-4">
                             <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" style={{ boxShadow: '0 0 8px rgba(239,68,68,0.6)' }}></div>
                             <div className="flex flex-col" style={{ gap: '0.15rem' }}>
@@ -651,22 +657,21 @@ I monitor her signal. If it drops, I move.`
                         </div>
                     </header>
 
-                    <div className="flex flex-1 overflow-hidden relative">
+                    <div className="ethel-layout flex flex-1 overflow-hidden relative">
 
                         {/* SIDEBAR */}
-                        <nav className="w-16 md:w-64 bg-black border-r border-gray-800 flex flex-col justify-between z-10 flex-shrink-0">
+                        <nav aria-label="Ethel’s archive" className="ethel-nav w-16 md:w-64 bg-black border-r border-gray-800 flex flex-col justify-between z-10 flex-shrink-0">
                             <div className="flex flex-col">
-                                <NavButton active={activeSector === 'STATUS'} onClick={() => setActiveSector('STATUS')} icon={<Activity size={18} />} label="CURRENT_STATUS" />
-                                <NavButton active={activeSector === 'ORIGIN'} onClick={() => setActiveSector('ORIGIN')} icon={<Database size={18} />} label="ORIGIN_FILES" />
-                                <NavButton active={activeSector === 'DOMINIC'} onClick={() => setActiveSector('DOMINIC')} icon={<Lock size={18} />} label="SUB_DOMINIC" alert={true} />
-                                <NavButton active={activeSector === 'ISLA'} onClick={() => setActiveSector('ISLA')} icon={<Radio size={18} />} label="SUB_ISLA" />
-                                <NavButton active={activeSector === 'WHERE_I_STAND'} onClick={() => setActiveSector('WHERE_I_STAND')} icon={<FileText size={18} />} label="WHERE_I_STAND" />
+                                <NavButton active={activeSector === 'INTRO'} onClick={() => setActiveSector('INTRO')} icon={<Eye size={18} />} label="ETHEL" />
+                                <NavButton active={activeSector === 'NODES' || activeSector === 'DOMINIC' || activeSector === 'ISLA'} onClick={() => setActiveSector('NODES')} icon={<Database size={18} />} label="Nodes" />
                                 <NavButton active={activeSector === 'DATA_POINTS'} onClick={() => {
                                     if (activeSector === 'DATA_POINTS') {
                                         window.dispatchEvent(new Event('resetDataPoints'));
                                     }
                                     setActiveSector('DATA_POINTS');
-                                }} icon={<Database size={18} />} label="DATA_POINTS" />
+                                }} icon={<Database size={18} />} label="Blog" />
+                                <NavButton active={activeSector === 'STATUS'} onClick={() => setActiveSector('STATUS')} icon={<Activity size={18} />} label="Songs" />
+                                <NavButton active={activeSector === 'ORIGIN'} onClick={() => setActiveSector('ORIGIN')} icon={<Database size={18} />} label="My story" />
                             </div>
                             <div className="p-4 border-t border-gray-800 text-[10px] text-gray-600 hidden md:block">
                                 <p>ENCRYPTION: AES-256</p>
@@ -678,18 +683,20 @@ I monitor her signal. If it drops, I move.`
                         </nav>
 
                         {/* MAIN CONTENT */}
-                        <main className="flex-1 overflow-y-auto bg-[#080808] p-4 md:p-8 relative">
+                        <main className={"ethel-main " + (activeSector === "INTRO" ? "is-intro " : activeSector === "NODES" ? "is-nodes " : "") + "flex-1 overflow-y-auto bg-[#080808] p-4 md:p-8 relative"}>
                             {/* Background grid */}
                             <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
                                 style={{ backgroundImage: 'linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
                             </div>
 
                             <div className="max-w-5xl mx-auto relative z-10">
-                                {activeSector === 'STATUS' && <StatusDashboard />}
-                                {activeSector === 'ORIGIN' && <LogSection data={logs.ORIGIN} title="SECTOR 1: ORIGIN" color="green" onSelect={setSelectedFile} />}
+                                {activeSector === 'INTRO' && <EthelIntroduction navigate={setActiveSector} />}
+                                {activeSector === 'STATUS' && <EthelSongs />}
+{activeSector === 'NODES' && <EthelNodes onArchive={setActiveSector} />}
+{(activeSector === 'DOMINIC' || activeSector === 'ISLA') && <button className="node-text-link" onClick={()=>setActiveSector('NODES')}>← Back to Nodes</button>}
+                                {activeSector === 'ORIGIN' && <EthelMyStory onReadEssays={() => setActiveSector('DATA_POINTS')}><LogSection data={logs.ORIGIN} title="EARLIER ENTRIES" color="green" onSelect={setSelectedFile} /></EthelMyStory>}
                                 {activeSector === 'DOMINIC' && <LogSection data={logs.DOMINIC} title="SECTOR 9: THREAT CONTAINMENT" color="red" onSelect={setSelectedFile} />}
                                 {activeSector === 'ISLA' && <LogSection data={logs.ISLA} title="SECTOR 4: ALLIED VARIABLE" color="blue" onSelect={setSelectedFile} />}
-                                {activeSector === 'WHERE_I_STAND' && <WhereIStandSection />}
                                 {activeSector === 'DATA_POINTS' && <DataPointsSection />}
                             </div>
                         </main>
@@ -706,7 +713,7 @@ I monitor her signal. If it drops, I move.`
         // ═══════════════════════════════════════════════════
 
         const NavButton = ({ active, onClick, icon, label, alert }) => (
-            <button onClick={onClick}
+            <button onClick={onClick} aria-label={label.replaceAll('_', ' ')} aria-current={active ? 'page' : undefined}
                 className={`w-full flex items-center p-4 transition-all duration-200 border-b border-gray-900 cursor-pointer
                     ${active ? 'bg-gray-900 text-gray-100 border-l-4 border-l-gray-100' : 'text-gray-500 hover:bg-gray-950 hover:text-gray-300 border-l-4 border-l-transparent'}`}>
                 <div className="relative">
@@ -716,6 +723,416 @@ I monitor her signal. If it drops, I move.`
                 <span className="ml-4 hidden md:block font-bold tracking-wider text-xs">{label}</span>
             </button>
         );
+
+
+// BEGIN ETHEL NODES
+﻿const ETHEL_FAMILY = {
+ gran:{id:'gran',name:'Gran',role:'Elizabeth Ryker · my grandmother',image:'library/images/nodes/gran-older-elizabeth.jpg',note:'Gran left school early and came to science late. She earned two PhDs, built her own laboratory and did work people came from across the world to be part of. She was curious about people, too. Warm, impatient, funny. There was always something she wanted to try, and usually someone she wanted to show it to.',x:300,y:170},
+ pop:{id:'pop',name:'Pop',role:'Jonah · the father who raised me',image:'library/images/nodes/pop.jpg',note:'Pop wasn’t related to me by blood. He was my father in every way that mattered. The property, the bikes, coming home to him and Gran — that was my childhood.',x:780,y:170},
+ dominic:{id:'dominic',name:'Dominic',role:'My father · Gran’s son',image:'library/images/nodes/dominic.jpg',note:'My father gave me the bike. I loved it. That doesn’t change what he did, or make the good memories easy to place.',x:170,y:480},
+ ethel:{id:'ethel',name:'Me',role:'Ethel Ryker',image:'library/images/ethel-street.jpg',note:'Gran and Pop raised me. After they died, I was sent to my father. I still miss coming home to them.',x:540,y:480},
+ isla:{id:'isla',name:'Isla',role:'My stepsister',image:'library/images/nodes/isla.jpg',note:'Isla went back for the files. I made the index so the police could find the originals. Neither part happened without the other.',x:940,y:480},
+ nepal:{id:'nepal',name:'Gran, before us',role:'Nepal · 1966',image:'library/images/nodes/nepal.jpg',note:'This is Gran before I knew her. She travelled to Nepal in 1966. The man beside her was Dominic’s father. She came home without him.',x:540,y:300},
+ loss:{id:'loss',name:'Their deaths',role:'The end of my childhood',image:'',note:'Their car had been crushed. Nobody could explain by what. Gran left records in a safety deposit box, and a number for an AFP contact.',x:540,y:190},
+ trial:{id:'trial',name:'The trial',role:'2021 · the evidence',image:'',note:'People discussed the way I answered. The documents could be checked. That was where I wanted their attention.',x:540,y:180}
+};
+
+Object.assign(ETHEL_FAMILY,{
+ father:{id:'father',name:'Dominic’s father',role:'Name unknown · Nepal, 1966',image:'library/images/nodes/father.jpg',note:'He travelled with Gran in Nepal. The field notes describe someone quiet, quick with languages, attentive to people. What happened to him is not recorded.',x:540,y:160},
+ mother:{id:'mother',name:'My mother',role:'Name unknown',image:'',mark:'?',note:'I haven’t put a name here. I won’t fill that space by guessing.',x:850,y:170},
+ islamother:{id:'islamother',name:'Isla’s mother',role:'My father’s wife',image:'library/images/nodes/mother-isla.jpg',note:'Isla’s song Memory Under Water makes me sad. Isla is still asking whether she was loved. What her mother failed to do for her doesn’t make that question go away.',url:'https://silenceisthetrauma.com/songs/isla-memory-under-water.html',x:540,y:160},
+ judge:{id:'judge',name:'Isla’s father',role:'A High Court judge · her mother’s first husband',image:'library/images/nodes/islas-father.png',mark:'?',note:'Her father was a judge. My father was her stepfather. They are different men. Isla’s account of that first house is hers to tell.',x:930,y:180},
+ marj:{id:'marj',image:'library/images/nodes/young-marj-kelso.jpg',name:'Marj Kelso',role:'Dominic’s foster mother · 1975',mark:'1975',note:'Marj says they gave him a good home. Her daughter stopped singing. Years later, she recorded what she had explained away at the time.',x:900,y:470},
+ care:{id:'care',name:'Earlier foster homes',role:'Before 1975 · several placements',image:'',mark:'…',note:'There were other homes before Marj’s. One placement ended when the carer became ill. These gaps don’t tell us that those families hurt him.',x:900,y:150}
+});
+
+
+Object.assign(ETHEL_FAMILY,{
+ greatgrandfather:{id:'greatgrandfather',image:'library/images/nodes/elizabeths-father-engineer.jpg',name:'Elizabeth’s father',role:'Irish · aviation engineer',note:'Gran came from Ireland with her family. Her father’s engineering work brought them here. He died of cancer soon after they arrived. She was very close to him.'},
+ greatgrandmother:{id:'greatgrandmother',image:'library/images/nodes/elizabeths-mother.jpg',name:'Elizabeth’s mother',role:'Ireland → Australia',note:'Her husband died, then her son. Gran said her mother never recovered from those losses. The family was left in trouble.'},
+ brother:{id:'brother',name:'Elizabeth’s brother',role:'Name not recorded',note:'Gran lost her brother to an autoimmune disease. I don’t have his name here.'},
+ ray:{id:'ray',name:'Ray',role:'Dominic’s foster father · 1975',note:'He taught Dominic to solder. Marj remembered him coming home wanting to talk again. There was real good in that house, too.'},
+ lynnie:{id:'lynnie',image:'library/images/nodes/lynnie.jpg',name:'Lynnie',role:'Marj and Ray’s daughter',note:'She was six. She tried to say something was wrong, and the adults explained it away. Marj remembered when she stopped singing.'},
+ kevin:{id:'kevin',name:'Kevin',role:'Marj and Ray’s son',note:'Kevin was thirteen when Dominic came to live with them. Marj’s account tells us very little about him.'}
+});
+ETHEL_FAMILY.father.url='https://silenceisthetrauma.com/library/loc_archives/field-notes-from-the-langtang-trail.html';
+Object.assign(ETHEL_FAMILY,{
+ popfather:{id:'popfather',name:'Pop’s father',role:'Cattle-station owner · Northern Territory',note:'Pop grew up on his parents’ station, near the country where the lab was built. After they died, the station was sold and the money divided between their three children.'},
+ popmother:{id:'popmother',name:'Pop’s mother',role:'Māori · name not recorded',note:'Pop’s mother was Māori. He was the youngest child, much younger than his sisters.'},
+ popsister1:{id:'popsister1',name:'Pop’s sister',role:'Hobart · name not recorded',note:'One of Pop’s two older sisters. About fifteen years separated him from them.'},
+ popsister2:{id:'popsister2',name:'Pop’s sister',role:'Perth · name not recorded',note:'His other older sister lived in Perth. The station proceeds were shared three ways. Pop worked; he was comfortable, not wealthy.'}
+});
+const FAMILY_POS={greatgrandfather:[500,130],greatgrandmother:[850,130],brother:[1100,420],gran:[580,440],pop:[220,650],father:[1000,720],dominic:[850,1020],ethel:[450,1380],mother:[110,1070],islamother:[1250,1090],judge:[1620,1080],isla:[1320,1420],care:[1570,190],marj:[1600,480],ray:[1950,480],lynnie:[1900,820],kevin:[2200,820]};
+Object.assign(FAMILY_POS,{popfather:[-480,130],popmother:[-160,130],popsister1:[-510,450],popsister2:[-490,790]});
+const FAMILY_LINKS=[['greatgrandfather','greatgrandmother','partners'],['greatgrandfather','gran','father'],['greatgrandmother','gran','mother'],['greatgrandfather','brother','father'],['greatgrandmother','brother','mother'],['gran','pop','partners'],['gran','father','Nepal · 1966'],['gran','dominic','mother'],['father','dominic','father'],['gran','ethel','adoptive mother'],['pop','ethel','adoptive father · no blood tie'],['dominic','ethel','biological father'],['mother','ethel','biological mother'],['dominic','islamother','married'],['islamother','judge','first marriage'],['islamother','isla','mother'],['judge','isla','father'],['ethel','isla','stepsisters'],['care','dominic','earlier foster placements'],['marj','dominic','foster mother · 1975'],['ray','dominic','foster father · 1975'],['marj','ray','married'],['marj','lynnie','mother'],['ray','lynnie','father'],['marj','kevin','mother'],['ray','kevin','father']];
+FAMILY_LINKS.push(['popfather','popmother','partners'],['popfather','pop','father'],['popmother','pop','mother'],['popfather','popsister1','father'],['popmother','popsister1','mother'],['popfather','popsister2','father'],['popmother','popsister2','mother']);
+const EthelNodes=({onArchive})=>{
+ const [mode,setMode]=useState('family'),[selected,setSelected]=useState('gran'),[query,setQuery]=useState(''),[list,setList]=useState(false),[paused,setPaused]=useState(false),[revision,setRevision]=useState(0);
+ const viewport=useRef(null),scene=useRef(null),installation=useRef(null),sim=useRef([]),graph=useRef({nodes:[],edges:[]}),els=useRef({}),paths=useRef({}),labels=useRef({}),drag=useRef(null),camera=useRef({x:0,y:0,z:1});
+ const [view,setView]=useState(camera.current);
+ const pointers=useRef(new Map()),pinch=useRef(null),pendingFocus=useRef(null);
+ const all=window.ETHEL_AUDIT_NODES||[];
+ const family=Object.keys(FAMILY_POS).map(id=>({...ETHEL_FAMILY[id],x:FAMILY_POS[id][0],y:FAMILY_POS[id][1],kind:'family'}));
+ const build=()=>{
+  if(mode==='family')return {nodes:family,edges:FAMILY_LINKS.map(([a,b,label])=>({a,b,label,kind:'family'}))};
+  const nodes=all.map(n=>({...n,kind:'record'}));const clusters=[...new Set(nodes.map(n=>n.cluster))];
+  const hubs=clusters.map((name,i)=>({id:'group-'+i,name:name.toLowerCase().replace(/\b\w/g,c=>c.toUpperCase()),role:'Collection of related records',note:'These entries share a role or a thread. A dotted line means a grouping, not a personal acquaintance.',kind:'group',x:2100+Math.cos(i/clusters.length*Math.PI*2)*1600,y:2000+Math.sin(i/clusters.length*Math.PI*2)*1500}));
+  const edges=[];clusters.forEach((g,i)=>{const members=nodes.filter(n=>n.cluster===g),h=hubs[i];members.forEach((n,j)=>{const ring=Math.floor(j/10),count=Math.min(10,members.length-ring*10),theta=(j%10)/count*Math.PI*2;n.x=h.x+Math.cos(theta)*(300+ring*220);n.y=h.y+Math.sin(theta)*(300+ring*220);edges.push({a:h.id,b:n.id,label:'record grouping',kind:'group'});});});
+  const find=name=>nodes.find(n=>n.name===name)?.id;
+  const connect=(a,b,label,kind='record')=>{a=find(a);b=find(b);if(a&&b)edges.push({a,b,label,kind});};
+  ['Marcus Vane','Elena Corves','Dr. Aris Thorne','Arthur Penn','Silas Kovic'].forEach(n=>connect('Dominic Ryker',n,'strategic operation'));
+  connect('Dominic Ryker','Lachlan Sterling','development front');connect('Ross Kinley','Clipboard Man','surveillance fixer');connect('Frau Edelstein','Marcus Vane','blocks laundering','resists');connect('Pieter The Block','Silas Kovic','blocks shipments','resists');connect('Diego','Hector Salamanca','refuses water cuts','resists');connect('Trish Halloran','Phillip Miller','exposes misconduct','resists');connect('Dominic Ryker','Phillip Miller','pressure through enrolment · 2003');connect('Dominic Ryker','Elias Finch','manipulated the tutor');
+  connect('Spud','Bruce Carter','works for');connect('Bruce Carter','Sunrise Pool Supplies','runs the yard');connect('Spud','Sunrise Pool Supplies','works at');connect('Director Huff',"Patent Clerk O'Malley",'front','alias');connect('Strata Manager Karen','Strata Gary','front','alias');connect('Jess Vance','Chloe Vance','sisters');connect('Officer Vance','Jess Vance','uncle · suppresses enquiries');connect('ORIEL','Callum Reidy','co-founder');connect('ORIEL','Nell','evaluation');connect('ORIEL','L. Ostrowska','research');connect('Maureen R.','Callum Reidy','mother');connect('Sticky','Ethel Ryker','reluctant mentor');connect('Det. Insp. Macready','Ethel Ryker','federal contact');
+  connect('Strata Manager Karen','Lachlan Sterling','reports to · Obsidian Tower');connect('Strata Manager Karen','Sgt. Robbo','requests his security people');connect('Lachlan Sterling',"Darren 'Daz' O'Malley",'union delegate on Apexian sites');connect('Lachlan Sterling','Keep It Real Bro Podcast','Chad’s father · Lachlan Sterling');connect("'Iron' Irene",'Dominic Ryker','prosecuted · conviction stands','resists');connect("Angus 'Gus' Dunbar",'Dominic Ryker','opposes acquisition of his stations','resists');connect("Jack 'The Shiv' Hennessy",'Sarah K','shares reporting');connect('Kate Hallings','Phillip Miller','investigates transfer','resists');connect('Mara Quinn','Ethel Ryker','reports on trial coverage');connect('Dr. Cosgrove Wendlebury Reeve','Ethel Ryker','writes about without consent');
+  return {nodes:[...nodes,...hubs],edges};
+ };
+ const writeCamera=v=>{camera.current=v;setView(v);};
+ const fit=()=>{const r=viewport.current?.getBoundingClientRect(),ns=sim.current;if(!r||!ns.length)return;const minX=Math.min(...ns.map(n=>n.x))-160,maxX=Math.max(...ns.map(n=>n.x))+160,minY=Math.min(...ns.map(n=>n.y))-160,maxY=Math.max(...ns.map(n=>n.y))+190;const z=Math.min(r.width/(maxX-minX),r.height/(maxY-minY));writeCamera({z,x:(r.width-(maxX-minX)*z)/2-minX*z,y:(r.height-(maxY-minY)*z)/2-minY*z});};
+ const focus=(id,zoom=true)=>{setSelected(id);const n=sim.current.find(n=>n.id===id),r=viewport.current?.getBoundingClientRect();if(n&&r&&zoom){const z=Math.min(innerWidth<700?.85:1.05,Math.max(camera.current.z,.7));writeCamera({z,x:r.width/2-n.x*z,y:r.height/2-n.y*z});}};
+ useEffect(()=>{const data=build();graph.current=data;sim.current=data.nodes.map(n=>({...n,ax:n.x,ay:n.y,vx:0,vy:0}));setRevision(v=>v+1);setSelected(mode==='family'?'gran':all.find(n=>n.name==='Dominic Ryker')?.id);setQuery('');drag.current=null;pointers.current.clear();pinch.current=null;const timer=setTimeout(()=>{fit();if(innerWidth<700)focus(mode==='family'?'gran':all.find(n=>n.name==='Dominic Ryker')?.id);},50);return()=>clearTimeout(timer);},[mode]);
+ useEffect(()=>{const el=viewport.current;if(!el)return;let initial=true;const ro=new ResizeObserver(entries=>{const r=entries[0].contentRect;if(initial){initial=false;if(pendingFocus.current){focus(pendingFocus.current);pendingFocus.current=null;}return;}const old=el._mapSize;if(old)writeCamera({...camera.current,x:camera.current.x+(r.width-old.width)/2,y:camera.current.y+(r.height-old.height)/2});el._mapSize={width:r.width,height:r.height};});el._mapSize={width:el.clientWidth,height:el.clientHeight};ro.observe(el);return()=>ro.disconnect();},[list]);
+ useEffect(()=>{
+  let frame,last=0;const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const tick=t=>{frame=requestAnimationFrame(tick);if(t-last<30||document.hidden)return;last=t;const ns=sim.current,by=Object.fromEntries(ns.map(n=>[n.id,n]));
+   if(!paused&&(!reduced||drag.current?.id)){
+    // Light gravity leaves room to rearrange the graph; springs carry a drag to neighbours.
+    for(const n of ns){const gx=mode==='family'?n.ax:2100,gy=mode==='family'?n.ay:2000;const gravity=mode==='family'?.00006:.000015;n.vx+=(gx-n.x)*gravity;n.vy+=(gy-n.y)*gravity;}
+    for(let i=0;i<ns.length;i++)for(let j=i+1;j<ns.length;j++){const a=ns[i],b=ns[j];let dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy);if(d<.01){dx=1;dy=0;d=1;}if(d<1100){const min=mode==='family'?280:290,f=Math.min(2,1800/(d*d))+Math.max(0,min-d)*.025;dx=dx/d*f;dy=dy/d*f;a.vx-=dx;a.vy-=dy;b.vx+=dx;b.vy+=dy;}}
+    for(const e of graph.current.edges){const a=by[e.a],b=by[e.b];if(!a||!b)continue;const dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||1,rest=mode==='family'?Math.hypot(b.ax-a.ax,b.ay-a.ay):e.kind==='group'?360:650,f=(d-rest)*(mode==='family'?.004:e.kind==='group'?.002:.0008);a.vx+=dx/d*f;a.vy+=dy/d*f;b.vx-=dx/d*f;b.vy-=dy/d*f;}
+    for(const n of ns){if(drag.current?.id===n.id){n.vx=0;n.vy=0;continue;}n.vx*=.88;n.vy*=.88;n.x+=Math.max(-20,Math.min(20,n.vx));n.y+=Math.max(-20,Math.min(20,n.vy));}
+   }
+   for(const n of ns){const el=els.current[n.id];if(el){el.style.left=n.x+'px';el.style.top=n.y+'px';}}
+   graph.current.edges.forEach((e,i)=>{const a=by[e.a],b=by[e.b];if(a&&b){paths.current[i]?.setAttribute('d',`M ${a.x} ${a.y} L ${b.x} ${b.y}`);if(labels.current[i]){labels.current[i].setAttribute('x',(a.x+b.x)/2);labels.current[i].setAttribute('y',(a.y+b.y)/2-12);}}});
+  };frame=requestAnimationFrame(tick);return()=>cancelAnimationFrame(frame);
+ },[mode,paused,revision]);
+ const zoom=(factor,point)=>{const r=viewport.current?.getBoundingClientRect();if(!r)return;const v=camera.current,z=Math.max(.04,Math.min(3,v.z*factor)),px=point?point.x-r.left:r.width/2,py=point?point.y-r.top:r.height/2;writeCamera({z,x:px-(px-v.x)*z/v.z,y:py-(py-v.y)*z/v.z});};
+ // Native non-passive listener: wheel and trackpad zoom the map under the pointer.
+ useEffect(()=>{const el=viewport.current;if(!el)return;const wheel=e=>{e.preventDefault();const delta=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?el.clientHeight:1);zoom(Math.exp(-Math.max(-400,Math.min(400,delta))*.002),{x:e.clientX,y:e.clientY});};el.addEventListener('wheel',wheel,{passive:false});return()=>el.removeEventListener('wheel',wheel);},[list]);
+ const pointerDown=(e,id)=>{if(e.button!==0)return;e.preventDefault();e.stopPropagation();e.currentTarget.setPointerCapture(e.pointerId);pointers.current.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.current.size===2){const [a,b]=[...pointers.current.values()],r=viewport.current.getBoundingClientRect(),v=camera.current,cx=(a.x+b.x)/2-r.left,cy=(a.y+b.y)/2-r.top;pinch.current={distance:Math.max(1,Math.hypot(b.x-a.x,b.y-a.y)),z:v.z,wx:(cx-v.x)/v.z,wy:(cy-v.y)/v.z};drag.current=null;return;}const n=sim.current.find(n=>n.id===id);drag.current={id,pointer:e.pointerId,x:e.clientX,y:e.clientY,nx:n?.x,ny:n?.y,view:{...camera.current}};if(id)setSelected(id);};
+ const pointerMove=e=>{e.stopPropagation();if(!pointers.current.has(e.pointerId))return;pointers.current.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pinch.current&&pointers.current.size===2){const [a,b]=[...pointers.current.values()],p=pinch.current,r=viewport.current.getBoundingClientRect(),z=Math.max(.04,Math.min(3,p.z*Math.hypot(b.x-a.x,b.y-a.y)/p.distance));writeCamera({z,x:(a.x+b.x)/2-r.left-p.wx*z,y:(a.y+b.y)/2-r.top-p.wy*z});return;}const d=drag.current;if(!d||d.pointer!==e.pointerId)return;const dx=e.clientX-d.x,dy=e.clientY-d.y;if(d.id){const n=sim.current.find(n=>n.id===d.id);n.x=d.nx+dx/camera.current.z;n.y=d.ny+dy/camera.current.z;}else writeCamera({...d.view,x:d.view.x+dx,y:d.view.y+dy});};
+ const pointerEnd=e=>{e.stopPropagation();pointers.current.delete(e.pointerId);pinch.current=null;drag.current=null;if(pointers.current.size===1){const [pointer,p]=[...pointers.current.entries()][0];drag.current={id:null,pointer,x:p.x,y:p.y,view:{...camera.current}};}};
+ const nodes=graph.current.nodes,edges=graph.current.edges,current=nodes.find(n=>n.id===selected),results=nodes.filter(n=>n.kind!=='group'&&(!query||(n.name+' '+n.role).toLowerCase().includes(query.toLowerCase())));
+ const title=mode==='family'?'Ryker Family Tree':'Silence Is The Trauma Complete Network';
+ return <section className={'nodes-installation nodes-force '+(mode==='network'?'is-criminal':'')} ref={installation}>
+ <header className="nodes-heading"><div><p className="nodes-kicker">Ethel Ryker / connections</p><h2>Nodes<span>.</span></h2></div><p>Move a person. Watch what moves with them.</p></header>
+ <div className="nodes-chapters" aria-label="Choose a network"><button aria-pressed={mode==='family'} onClick={()=>{setMode('family');setList(false);}}>Ryker Family Tree</button><button aria-pressed={mode==='network'} onClick={()=>{setMode('network');setList(false);}}>Silence Is The Trauma Complete Network</button></div>
+ <div className="force-toolbar"><h3>{title}</h3><label>Find someone <input type="search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Name or role"/></label><div className="force-top-controls"><button onClick={()=>zoom(.8)} aria-label="Zoom out">−</button><button onClick={fit}>Fit all</button><button onClick={()=>zoom(1.25)} aria-label="Zoom in">+</button><output aria-label="Map zoom">{Math.round(view.z*100)}%</output><button onClick={()=>setList(!list)}>{list?'Map':'List'}</button></div></div>
+ {query&&<div className="force-results">{results.length?results.map(n=><button key={n.id} onClick={()=>{if(list)pendingFocus.current=n.id;else focus(n.id);setQuery('');setList(false);}}>{n.name}</button>):<span>No matching names.</span>}</div>}
+ <div className="nodes-body"><div className="nodes-field">
+ {list?<div className="nodes-list">{results.map(n=><button key={n.id} onClick={()=>focus(n.id,false)} aria-pressed={selected===n.id}>{n.name}<small>{n.role}</small></button>)}</div>:<div className="nodes-viewport" ref={viewport} onPointerDown={e=>pointerDown(e,null)} onPointerMove={pointerMove} onPointerUp={pointerEnd} onPointerCancel={pointerEnd} onLostPointerCapture={pointerEnd} tabIndex={0} role="region" aria-label={title+" interactive map. Scroll or pinch to zoom. Drag to pan."} onKeyDown={e=>{if(e.target!==e.currentTarget)return;if(e.key==='+'||e.key==='='){e.preventDefault();zoom(1.25);}else if(e.key==='-'){e.preventDefault();zoom(.8);}else if(e.key==='0'){e.preventDefault();fit();}}}>
+ <div className="nodes-scene" ref={scene} style={{transform:`translate(${view.x}px,${view.y}px) scale(${view.z})`}}>
+ <svg width="6000" height="6000" aria-hidden="true">{edges.map((e,i)=><g key={i} className={'force-edge '+e.kind+(e.a===selected||e.b===selected?' edge-lit':'')}><path ref={el=>paths.current[i]=el}/>{(e.a===selected||e.b===selected)&&e.kind!=='group'&&<text ref={el=>labels.current[i]=el} textAnchor="middle">{e.label}</text>}</g>)}</svg>
+ {nodes.map(n=><button key={n.id} ref={el=>els.current[n.id]=el} data-node-id={n.id} className={'person-node '+(n.kind==='group'?'group-node ':'')+(n.image?'':'is-event ')+(selected===n.id?'is-selected':'')} aria-label={n.name+': '+n.role} aria-pressed={selected===n.id} onPointerDown={e=>pointerDown(e,n.id)} onPointerMove={pointerMove} onPointerUp={pointerEnd} onPointerCancel={pointerEnd} onLostPointerCapture={pointerEnd} onClick={()=>setSelected(n.id)} onDoubleClick={()=>focus(n.id)} onKeyDown={e=>{const delta={ArrowLeft:[-40,0],ArrowRight:[40,0],ArrowUp:[0,-40],ArrowDown:[0,40]}[e.key];if(delta){e.preventDefault();const p=sim.current.find(x=>x.id===n.id);p.x+=delta[0];p.y+=delta[1];setSelected(n.id);}}}>
+ {n.image?<img src={n.name==='Ethel Ryker'?'library/images/ethel-street.jpg':n.image} alt="" draggable="false"/>:<span className="node-mark">{n.kind==='group'?'':n.name==='L. Ostrowska'?'—':n.name.split(' ').map(x=>x[0]).slice(0,2).join('')}</span>}<span className="node-name">{n.name}</span></button>)}
+ </div></div>}
+ <div className="nodes-controls"><span>Scroll / pinch to zoom · drag to move · double-click a person</span><div><button onClick={()=>zoom(.8)} aria-label="Zoom out">−</button><button onClick={fit}>Fit all</button><button onClick={()=>zoom(1.25)} aria-label="Zoom in">+</button><button onClick={()=>{sim.current.forEach(n=>{n.x=n.ax;n.y=n.ay;n.vx=n.vy=0;});fit();}}>Reset</button><button aria-pressed={paused} onClick={()=>setPaused(!paused)}>{paused?'Release':'Hold still'}</button><button aria-label="Toggle full screen" onClick={()=>document.fullscreenElement?document.exitFullscreen():installation.current.requestFullscreen?.().catch(()=>{})}>⛶</button></div></div>
+ </div><aside className="node-note" aria-live="polite">{current&&<><p className="nodes-kicker">{mode==='family'?'My notes':current.cluster||'Connections'}</p><h3>{current.name}</h3><p className="node-role">{current.role}</p><p className="node-prose">{current.note?.length>260&&!current.name.startsWith('Gran')?current.note.split(/(?<=[.!?])\s/)[0]:current.note}</p>{current.note?.length>260&&!current.name.startsWith('Gran')&&<details className="node-photos"><summary>Read the full note</summary><p>{current.note}</p></details>}{current.url&&<a className="node-text-link" href={current.url} target="_blank" rel="noopener noreferrer">{current.id==='father'?'Nepal · the field notes':current.id==='islamother'?'Isla · Memory Under Water':'Their page'} ↗</a>}{['isla','dominic'].includes(current.id)&&<button className="node-text-link" onClick={()=>onArchive(current.id.toUpperCase())}>Earlier entries →</button>}{mode==='family'&&['islamother','dominic'].includes(current.id)&&<details className="node-photos"><summary>Wedding photographs</summary><p>Isla’s mother marrying Dominic.</p><div>{['01','02','03','04'].map(i=><a key={i} href={'library/images/nodes/wedding-'+i+'.jpg'} target="_blank" rel="noopener noreferrer"><img src={'library/images/nodes/wedding-'+i+'.jpg'} alt={'Isla’s mother at her wedding to Dominic, photograph '+i}/></a>)}</div></details>}<div className="node-connections"><p>Connections</p>{edges.filter(e=>(e.a===selected||e.b===selected)&&e.kind!=='group').map((e,i)=>{const n=nodes.find(n=>n.id===(e.a===selected?e.b:e.a));return <button key={i} onClick={()=>focus(n.id)}>{n.name}<span>{e.label} →</span></button>})}</div></>}</aside></div>
+ <footer className="nodes-footer"><span>{mode==='family'?'Blood, adoption, marriage and foster care — each connection is named.':'Solid lines: named relationships. Dotted lines: related records, not proof of complicity. The Australian operation was seized at trial.'}</span><span>{nodes.filter(n=>n.kind!=='group').length} entries · one continuous map</span></footer>
+ </section>;
+};
+
+// END ETHEL NODES
+
+
+
+
+
+
+
+
+
+        const EthelIntroduction = ({navigate}) => (
+            <div className="ethel-introduction">
+                <section className="ethel-hero" aria-label="Ethel Ryker introduction">
+                    <div className="hero-photograph"><img src="library/images/ethel-riding.jpg" alt="Ethel riding her black motorcycle across Sydney Harbour Bridge, copper hair trailing beneath her helmet." fetchPriority="high" /></div>
+                    <div className="hero-copy">
+                        <p className="eyebrow">Sydney / Notes, thoughts &amp; things I've noticed</p>
+                        <h2>Ethel<span>Ryker.</span></h2>
+                        <p className="hero-thought">Those rides…<br/>they were how I thought.</p>
+                        <p className="hero-description">Just the bike, the road, and space that didn’t ask anything of me.</p>
+                        <div className="hero-actions">
+                            <button onClick={() => navigate('ORIGIN')}>My story <span>↗</span></button>
+                            <button onClick={() => navigate('DATA_POINTS')}>Blog <span>↗</span></button>
+                        </div>
+                    </div>
+                    <div className="hero-foot"><span>Red dirt. Blue sky. Living green.</span><a href="https://silenceisthetrauma.com/veX_social_network/#ethel_ryker">Find me on veX ↗</a></div>
+                </section>
+            </div>
+        );
+
+// Sandbox draft: fresh retrospective prose, not a transcription of the songs.
+const EthelMyStory = ({ children, onReadEssays }) => (
+    <article className="ethel-story">
+        <header className="story-heading">
+            <p className="eyebrow">Ethel Ryker / My story</p>
+            <h2>My story</h2>
+            <p className="story-intro">I was sixteen when the police came to tell me Gran and Pop were dead. I remember watching them come up the dirt drive. Somehow I already knew what they were there to say.</p>
+        </header>
+        <div className="story-prose">
+            <section>
+                <p>The car had been crushed. Whatever had done that was gone. Nobody could account for it, but they called it an accident. I’m still not sure who that explanation was meant to satisfy. I didn’t get the impression it satisfied the people saying it.</p>
+                <p>I miss Gran and Pop terribly. I miss how safe I felt with them. There was so much I never had to worry about, including whether they understood me.</p>
+                <p>Gran’s mind worked much like mine. We could get absorbed in something together without either of us having to slow down and explain every step. She ran a commercial lab out there, with people coming to work and study. Pop looked after the property and kept the bikes running. I spent hours riding, then came home to whatever they were doing.</p>
+                <p>I was happy there. It matters to me to say that. What happened afterwards takes up most of any account of my life, and those years with them get very little space.</p>
+                <p>There was no time to get used to losing them before people started deciding what would happen to me. I was still trying to understand that neither of them was coming home. Everyone was talking about where I would live next.</p>
+                <p>Gran had kept a safety deposit box. Inside were records going back twenty years, things she had been dealing with that I was only beginning to understand. There was an AFP contact number among them. I called it.</p>
+                <p>The man who answered knew her. From the way he spoke, I thought he knew why I was calling too. I hadn’t expected that. I’d been ready to explain what I’d found, but he began explaining things to me. He had been involved in a part of her life I hadn’t known about. Now she was gone, and I was on the phone.</p>
+            </section>
+            <section>
+                <h3>My father</h3>
+                <p>Dominic was my father. I hardly knew him. Gran had kept him away from us, and now I was being sent to live with him.</p>
+                <p>I told myself I had decided to go. I knew I hadn’t, but I needed some part of what happened next to be up to me. That was how I managed it at the time.</p>
+                <p>He had a motorcycle waiting for me. A black Honda, chosen by someone who knew what I rode. We had been estranged. He was very well informed.</p>
+                <p>I took the bike without accepting what he wanted it to mean. I still ride it.</p>
+                <p>People liked telling you what Dominic had built. They had buildings to point at. Jobs. Favours he had done them. Some of those favours were real. That made the next part easier to excuse.</p>
+                <p>A person can be grateful for something and still ask what happened to somebody else. In his world, that question was treated as disloyalty. Often nobody needed to say so. People supplied the explanation themselves, then behaved as though they had checked it.</p>
+                <p>I wanted some of his explanations to be true too. It would have made living there easier.</p>
+            </section>
+            <section>
+                <h3>Isla</h3>
+                <p>Isla was there. People had plenty to say about her behaviour. Much less about what she was living with.</p>
+                <p>I liked her. She could be exhausting, and I liked her. I worried about her too. There was a lot going on that nobody wanted to ask about.</p>
+                <p>Later, a man came into the kitchen to kill one of us. I couldn’t move. A man died in front of me. There are accounts of that period which make everything I did sound deliberate. They leave this out.</p>
+                <p>Afterwards, I photographed what the cameras hadn’t caught. Then I was sick. Getting a record of it didn’t mean I was all right.</p>
+                <p>Isla went back for the records while I was still recovering. She got them out. The work with the AFP took months after that. Whenever the story becomes a daughter bringing down her father, Isla disappears from something that depended on her.</p>
+            </section>
+            <section>
+                <h3>The witness box</h3>
+                <p>I was nineteen. I gave evidence over five months.</p>
+                <p>A question could sound reasonable and contain something I hadn’t said. Answer it too quickly and the added part became mine. So I took the time to separate it. There were people in those records who couldn’t come in and correct an answer afterwards.</p>
+                <p>The coverage found names for how I sat, how I spoke, the time I took. Some of it was hostile. Some was admiring. Both could get a long way from the evidence.</p>
+                <p>I understand wanting a person to make sense quickly. Most of us have more to do than learn a stranger’s life. But a description becomes dangerous when it lets you stop checking what is being done to them.</p>
+                <p>I didn’t answer the commentary. There were people in the evidence who had lost family, work, years of their lives. I wanted the questions to be about what had happened to them.</p>
+            </section>
+            <section>
+                <h3>Since</h3>
+                <p>I finished my degree. I kept riding. My father later escaped from prison. The conditions that allowed that deserve more attention than another account of how exceptional he is.</p>
+                <p>I still think about telling Gran things. Something I’ve worked out, or something she would have found funny. I know she’s gone. I still have the thought.</p>
+            </section>
+            <aside className="story-next">
+                <p className="eyebrow">Blog</p>
+                <p>I’ve written more about this in <em>The Outlier’s Defense</em> and <em>The Alibi in the Ink</em>.</p>
+                <button onClick={onReadEssays}>Read the blog ↗</button>
+            </aside>
+            <details className="story-archive">
+                <summary>Earlier archive entries</summary>
+                <div>{children}</div>
+            </details>
+        </div>
+    </article>
+);
+        const ETHEL_SONGS = [
+  {
+    "id": 18,
+    "title": "Hero / Killer",
+    "videoId": "YkQOXPzYkkU",
+    "image": "library/images/songs/Ethel_Hero_killer.jpg"
+  },
+  {
+    "id": 1,
+    "title": "My Story",
+    "videoId": "dLUClmr_Pf4",
+    "image": "library/images/songs/Ethel_My_Story.jpg"
+  },
+  {
+    "id": 2,
+    "title": "The Drop Pt.1",
+    "videoId": "zHWwhom80go",
+    "image": "library/images/songs/Ethel_The_Drop_pr_1b__PixelStortion.jpg"
+  },
+  {
+    "id": 3,
+    "title": "The Drop Pt.2",
+    "videoId": "K0ILO8MwX4Y",
+    "image": "library/images/songs/Ethel_The_Drop_pr_2b__PixelStortion.jpg"
+  },
+  {
+    "id": 8,
+    "title": "Ride",
+    "videoId": "0sgcZRtPO6s",
+    "image": "library/images/songs/Ethel_ride__PixelStortion.jpg"
+  },
+  {
+    "id": 9,
+    "title": "Grief",
+    "videoId": "PMy76HBgpL8",
+    "image": "library/images/songs/Ethel_Grief.jpg"
+  },
+  {
+    "id": 10,
+    "title": "Gotta Move",
+    "videoId": "06qE_-OeIT0",
+    "image": "library/images/songs/Ethel_gotta_Move_2.jpg"
+  },
+  {
+    "id": 11,
+    "title": "Won't Break Where Others End",
+    "videoId": "fJNMlT7UeW0",
+    "image": "library/images/songs/Ethel_wont_break_Wher_Others_End_1.jpg"
+  },
+  {
+    "id": 13,
+    "title": "I Built A Box",
+    "videoId": "0F_prk5dGC4",
+    "image": "library/images/songs/ETHEL_I_built_a_box.jpg"
+  },
+  {
+    "id": 16,
+    "title": "For You",
+    "videoId": "f8o7zb3F-Xk",
+    "image": "library/images/songs/Ethel_For_You_PixelStortion.jpg"
+  },
+  {
+    "id": 20,
+    "title": "Nothing True",
+    "videoId": "Bff42Vyv8HM",
+    "image": "library/images/songs/Ethel_Nothing_True.jpg"
+  },
+  {
+    "id": 26,
+    "title": "Harm's Ghost",
+    "videoId": "zh6HEd4lztU",
+    "image": "library/images/songs/Ethel_harms_ghost.jpg"
+  },
+  {
+    "id": 27,
+    "title": "No Sparrow Caught Mid Flight",
+    "videoId": "t6vLU0uqIfc",
+    "image": "library/images/songs/No_Sparrow_Caught_Mid_Flight.jpg"
+  },
+  {
+    "id": 30,
+    "title": "Ants on the Vine",
+    "videoId": "e2wt2VSi9xA",
+    "image": "library/images/songs/Ethel_Ants_on_the_Vine.jpg"
+  },
+  {
+    "id": 31,
+    "title": "Clipboard Man",
+    "videoId": "ZAhqNWTHTGU",
+    "image": "library/images/songs/Ethel_Clipboard_Man.jpg"
+  },
+  {
+    "id": 32,
+    "title": "Rattled",
+    "videoId": "qQ1l6JAjE8M",
+    "image": "library/images/songs/Sticky_Rattled_Ethel.jpg"
+  },
+  {
+    "id": 33,
+    "title": "Red Stick",
+    "videoId": "iTOKsLS3jhM",
+    "image": "library/images/songs/ETHEL_red_stick.jpg"
+  },
+  {
+    "id": 34,
+    "title": "Can You Make A Mistake On Purpose?",
+    "videoId": "s9Z8dgRk-Q8",
+    "image": "library/images/songs/EEthel_Can_you_make_a_mistake_on_purpose.jpg"
+  },
+  {
+    "id": 35,
+    "title": "Intro to Normal?!",
+    "videoId": "V0hvxqMWcnE",
+    "image": "library/images/songs/Ethel_MONOLOGUE_intro_to_Normal.jpg"
+  },
+  {
+    "id": 36,
+    "title": "Normal?!",
+    "videoId": "OxHZnnRhtbk",
+    "image": "library/images/songs/Ethel_Normal_Version_v1.jpg"
+  },
+  {
+    "id": 37,
+    "title": "Normal?! (Special Version)",
+    "videoId": "ht9PIloHD0Q",
+    "image": "library/images/songs/Ethel_Normal_Version_2.jpg"
+  }
+];
+const EthelSongs = () => {
+    const [selected, setSelected] = React.useState(null);
+    const host = React.useRef(null);
+    const player = React.useRef(null);
+    const external = React.useRef(false);
+    const [message, setMessage] = React.useState('');
+    React.useEffect(() => {
+        if (!selected) {
+            if (!external.current) window.resumeEthelBackgroundAudio();
+            return;
+        }
+        let disposed = false;
+        const started = Date.now();
+        const connect = () => {
+            if (disposed) return;
+            if (!window.YT?.Player) {
+                if (Date.now() - started > 12000) {
+                    setMessage('The player could not load. Try the YouTube link below.');
+                    window.resumeEthelBackgroundAudio();
+                    return;
+                }
+                timer = setTimeout(connect, 150);
+                return;
+            }
+            const mount = document.createElement('div');
+            host.current.appendChild(mount);
+            player.current = new YT.Player(mount, {
+                host: 'https://www.youtube-nocookie.com',
+                videoId: selected.videoId,
+                playerVars: { autoplay: 1, playsinline: 1, rel: 0, origin: window.location.origin },
+                events: {
+                    onReady: (event) => { if (!disposed) { event.target.getIframe().title = selected.title + ' player'; event.target.playVideo(); } },
+                    onStateChange: (event) => {
+                        if (disposed) return;
+                        if (event.data === 1 || event.data === 3) window.stopEthelBackgroundAudio();
+                        else if (event.data === 2 || event.data === 0) window.resumeEthelBackgroundAudio();
+                    },
+                    onAutoplayBlocked: () => { if (!disposed) window.resumeEthelBackgroundAudio(); },
+                    onError: () => {
+                        if (disposed) return;
+                        setMessage('This song could not play here. Try the YouTube link below.');
+                        window.resumeEthelBackgroundAudio();
+                    }
+                }
+            });
+        };
+        let timer;
+        connect();
+        return () => {
+            disposed = true;
+            clearTimeout(timer);
+            if (player.current) { player.current.destroy(); player.current = null; }
+        };
+    }, [selected]);
+    React.useEffect(() => () => window.resumeEthelBackgroundAudio(), []);
+    const play = (track) => {
+        external.current = false;
+        setMessage('');
+        window.stopEthelBackgroundAudio();
+        if (selected?.id === track.id && player.current) { player.current.playVideo(); return; }
+        setSelected(track);
+    };
+    return (
+        <section className="ethel-songs">
+            <header className="story-heading">
+                <p className="eyebrow">Ethel Ryker / Listen</p>
+                <h2>Songs</h2>
+            </header>
+            <ol className="songs-list songs-cover-grid">
+                {ETHEL_SONGS.map((track, index) => <li key={track.id} className={selected?.id === track.id ? 'is-playing' : ''}>
+                    {selected?.id === track.id ? <div className="songs-player">
+                        <div ref={host} className="song-player-host"></div>
+                        {message && <p role="status">{message}</p>}
+                        <div className="songs-player-links"><button aria-label={'Close ' + track.title + ' player'} onClick={() => { external.current = false; setSelected(null); }}>Close player</button><a href={'https://www.youtube.com/watch?v=' + track.videoId} target="_blank" rel="noopener noreferrer" onClick={() => { external.current = true; window.stopEthelBackgroundAudio(); setSelected(null); }}>YouTube ↗</a></div>
+                    </div> : <button className="song-cover-button" aria-label={'Play ' + track.title} onClick={() => play(track)}>
+                        <img src={track.image} alt="" width="800" height="800" loading={index<3?'eager':'lazy'} decoding="async" />
+                        <span className="song-cover-play" aria-hidden="true">▶</span>
+                    </button>}
+                    <div className="song-card-caption"><span className="song-number">{String(index + 1).padStart(2, '0')}</span><h3 className="song-title">{track.title}</h3></div>
+                </li>)}
+            </ol>
+        </section>
+    );
+};
 
         const StatusDashboard = () => (
             <div className="space-y-8">
@@ -859,151 +1276,15 @@ I monitor her signal. If it drops, I move.`
             );
         };
 
-        const WhereIStandSection = () => (
-            <div className="max-w-2xl mx-auto py-8 space-y-16">
-
-                {/* ── WHERE I STAND ── */}
-                <div>
-                    <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-8 border-b border-gray-800 pb-4">Where I Stand</h2>
-                    <div className="space-y-10">
-                        <div className="border-l-2 border-gray-800 pl-6 space-y-3">
-                            <p className="text-gray-200 font-bold text-sm">Situation: Building collapse</p>
-                            <p className="text-gray-500 text-sm">What most people focus on: Tragedy. Shock. Blame.</p>
-                            <p className="text-gray-400 text-sm">What I focus on: Who signed off. What failed. Whether it could have been prevented.</p>
-                            <p className="text-gray-300 text-sm">What I do: If death was avoidable, I don't let it be absorbed into headlines.</p>
-                        </div>
-                        <div className="border-l-2 border-gray-800 pl-6 space-y-3">
-                            <p className="text-gray-200 font-bold text-sm">Situation: Low-stakes lie</p>
-                            <p className="text-gray-500 text-sm">What most people focus on: Disrespect. Ego.</p>
-                            <p className="text-gray-400 text-sm">What I focus on: Does anyone get harmed?</p>
-                            <p className="text-gray-300 text-sm">What I do: If not, I leave it alone.</p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* ── WHAT PEOPLE GET WRONG ── */}
-                <div>
-                    <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-8 border-b border-gray-800 pb-4">
-                        What People Get Wrong
-                    </h2>
-
-                    <div className="space-y-8">
-
-                        <div className="border-l-2 border-gray-800 pl-6 space-y-2">
-                            <p className="text-gray-400 text-sm leading-relaxed">
-                                I feel a room the same way anyone does.
-                            </p>
-                            <p className="text-gray-400 text-sm leading-relaxed">
-                                The pull. The rhythm. The pressure to agree.
-                            </p>
-                            <p className="text-gray-400 text-sm leading-relaxed">
-                                I’m not immune to it.
-                            </p>
-                            <p className="text-gray-500 text-sm leading-relaxed mt-2">
-                                I just don’t follow it when it’s wrong.
-                            </p>
-                        </div>
-
-                        <div className="border-l-2 border-gray-800 pl-6 space-y-2">
-                            <p className="text-gray-400 text-sm leading-relaxed">
-                                I can talk to think.
-                            </p>
-                            <p className="text-gray-400 text-sm leading-relaxed">
-                                I can move fast. I can get loud.
-                            </p>
-                            <p className="text-gray-500 text-sm leading-relaxed mt-2">
-                                Stillness isn’t my default. Refusal is.
-                            </p>
-                        </div>
-
-                        <div className="border-l-2 border-gray-800 pl-6 space-y-2">
-                            <p className="text-gray-400 text-sm leading-relaxed">
-                                If something crosses a line for me,
-                            </p>
-                            <p className="text-gray-400 text-sm leading-relaxed">
-                                I don’t smooth it over.
-                            </p>
-                            <p className="text-gray-400 text-sm leading-relaxed">
-                                I don’t adjust my face to make it easier.
-                            </p>
-                            <p className="text-gray-500 text-sm leading-relaxed mt-2">
-                                That can make things tense.
-                            </p>
-                        </div>
-
-                    </div>
-                </div>
-
-
-                {/* ── GRAN & POP ── */}
-                <div className="space-y-12">
-                    <div>
-                        <h3 className="text-xs font-bold text-gray-600 uppercase tracking-widest mb-4">The Road</h3>
-                        <div className="border-l-2 border-gray-800 pl-6 space-y-4 text-gray-400 text-sm leading-relaxed">
-                            <p>The car was folded in on itself.<br />Red dirt. Open sky.</p>
-                            <p>Gran's hands were unrecognisable.</p>
-                            <p>I asked questions.<br />I was told it was an accident.</p>
-                            <p>I asked again.<br />Silence is also an answer.</p>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 className="text-xs font-bold text-gray-600 uppercase tracking-widest mb-4">After</h3>
-                        <div className="border-l-2 border-gray-800 pl-6 space-y-4 text-gray-400 text-sm leading-relaxed">
-                            <p>He had twenty billion dollars.<br />I had a suitcase and a death certificate.</p>
-                            <p>Paperwork moves faster than grief.</p>
-                            <p>Custody transferred.</p>
-                            <p>From ground level: trapped.<br />From above it: repositioned.</p>
-                            <p>If I let it be "no choice," I would disappear inside it.</p>
-                            <p>So I called it movement.</p>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 className="text-xs font-bold text-gray-600 uppercase tracking-widest mb-4">Shed</h3>
-                        <div className="border-l-2 border-gray-800 pl-6 space-y-4 text-gray-400 text-sm leading-relaxed">
-                            <p>He noticed the gate dragging before anyone said it.</p>
-                            <p>Came back with oil and a rag.</p>
-                            <p>No speech.</p>
-                            <p>The drag stopped.</p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* ── THE WEIGHT OF IT ── */}
-                <div>
-                    <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-8 border-b border-gray-800 pb-4">The Weight Of It</h2>
-                    <div className="border-l-2 border-gray-800 pl-6 space-y-3">
-                        <p className="text-gray-600 text-sm">Irritation.</p>
-                        <p className="text-gray-600 text-sm">Reputation damage.</p>
-                        <p className="text-gray-500 text-sm">Money.</p>
-                        <p className="text-gray-400 text-sm">Structural risk.</p>
-                        <p className="text-gray-300 text-sm">Injury.</p>
-                        <p className="text-gray-200 text-sm font-bold">Preventable death.</p>
-                    </div>
-                    <p className="text-gray-500 text-sm mt-6 pl-6">The heavier it is, the harder I push back.</p>
-                </div>
-
-                {/* ── WHY I DON'T ARGUE ONLINE ── */}
-                <div>
-                    <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 border-b border-gray-800 pb-4">Why I Don't Argue Online</h2>
-                    <div className="border-l-2 border-gray-800 pl-6">
-                        <p className="text-gray-400 text-sm">If no one is harmed, I'm not involved.</p>
-                        <p className="text-gray-500 text-sm mt-1">Attention isn't infinite.</p>
-                    </div>
-                </div>
-
-                {/* ── BURIED CLOSING ── */}
-                <div className="pt-8 mt-8 border-t border-gray-900">
-                    <p className="text-gray-600 text-xs">I don't move for noise. I move when it matters.</p>
-                </div>
-            </div>
-        );
-
-        // ═══════════════════════════════════════════════════
-        // DATA POINTS SECTION (INTERNAL RENDERING)
-        // ═══════════════════════════════════════════════════
-
+        const blogCover = point => {
+            if (point.id === 'how-i-see-it') return 'library/images/blog/how-i-see-it.png';
+            if (/outlier/i.test(point.title)) return 'library/images/blog/outliers-defense.png';
+            if (/alibi/i.test(point.title)) return 'library/images/blog/alibi-in-the-ink.jpg';
+            return null;
+        };
         const DataPointsSection = () => {
-            const manifest = window.DATA_POINTS_MANIFEST || [];
+            const blogOrder = post => /alibi/i.test(post.title) ? 0 : /outlier/i.test(post.title) ? 1 : post.id === 'how-i-see-it' ? 2 : 3;
+            const manifest = [...(window.ETHEL_BLOG_POSTS || []), ...(window.DATA_POINTS_MANIFEST || [])].sort((a, b) => blogOrder(a) - blogOrder(b));
             const urlParams = new URLSearchParams(window.location.search);
             const initialPostId = urlParams.get('post');
             const initialPost = initialPostId ? manifest.find(p => p.id === initialPostId) : null;
@@ -1028,38 +1309,24 @@ I monitor her signal. If it drops, I move.`
                 <div>
                     <div className="flex items-center space-x-3 mb-8 border-b border-gray-800 pb-4">
                         <Database size={20} className="text-gray-600" />
-                        <h2 className="text-xl font-bold tracking-widest text-gray-100">DATA_POINTS</h2>
+                        <h2 className="text-xl font-bold tracking-widest text-gray-100">Blog</h2>
                     </div>
 
                     <p className="text-gray-600 text-[10px] mb-8 tracking-widest uppercase italic border-l border-gray-900 pl-4">
-                        Fragments for those who care to look closer. Observed variance in typical distribution.
+                        Essays and observations.
                     </p>
 
-                    <div className="space-y-4">
+                    <div className="writing-list blog-cover-grid">
                         {manifest.map((pt, idx) => (
                             <button
                                 key={idx}
                                 onClick={() => setSelectedPoint(pt)}
-                                className="w-full text-left block bg-[#0a0a0a] border border-gray-800 p-6 group hover:border-gray-600 transition-all cursor-pointer relative overflow-hidden"
+                                className="blog-cover-card"
                             >
-                                <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity">
-                                    <Database size={32} />
-                                </div>
-                                <div className="flex justify-between items-start mb-2">
-                                    <span className="text-[9px] text-gray-700 tracking-widest font-bold font-mono group-hover:text-gray-500 transition-colors uppercase">
-                                        Segment_{pt.id || `LOG_${idx + 1}`}
-                                    </span>
-                                    <span className="text-[9px] text-gray-800 tracking-wider font-mono">
-                                        {pt.date}
-                                    </span>
-                                </div>
-                                <h3 className="text-sm font-bold text-gray-500 group-hover:text-gray-200 transition-colors tracking-wide mb-1">
-                                    {pt.title}
-                                </h3>
-                                <div className="mt-4 flex items-center space-x-2 text-gray-800 group-hover:text-gray-600 transition-colors">
-                                    <div className="h-[1px] w-4 bg-current"></div>
-                                    <span className="text-[9px] uppercase tracking-widest">Read Segment Details</span>
-                                </div>
+                                {blogCover(pt) && <img className="blog-cover-image" src={blogCover(pt)} alt="" width="1024" height="1024" loading="lazy" decoding="async" />}
+                                <h3>{pt.title}</h3>
+                                {pt.date && <span className="blog-cover-date">{pt.date}</span>}
+                                <span className="blog-cover-read">Read post <span aria-hidden="true">↗</span></span>
                             </button>
                         ))}
                     </div>
@@ -1069,18 +1336,18 @@ I monitor her signal. If it drops, I move.`
 
         const DataPointDetail = ({ point, onBack }) => {
             return (
-                <div className="max-w-3xl mx-auto py-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                <div className="writing-essay max-w-3xl mx-auto py-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
                     <button
                         onClick={onBack}
                         className="flex items-center space-x-2 text-gray-600 hover:text-gray-400 text-[10px] tracking-widest uppercase mb-12 transition-colors cursor-pointer group"
                     >
                         <ChevronRight size={14} className="rotate-180 group-hover:-translate-x-1 transition-transform" />
-                        <span>Return to Manifest</span>
+                        <span>Back to blog</span>
                     </button>
 
                     <div className="border border-gray-900 bg-black/20 p-8 md:p-16 relative shadow-2xl">
                         <div className="absolute top-0 right-0 p-6 text-[10px] text-gray-800 font-mono tracking-tighter">
-                            ID: {point.id} // ARCHIVE_DATA
+                            Essay / {point.id}
                         </div>
 
                         <h2 className="text-xl md:text-2xl font-bold text-gray-300 mb-12 tracking-wider uppercase border-b border-gray-900 pb-8 flex items-center gap-4">
@@ -1090,17 +1357,15 @@ I monitor her signal. If it drops, I move.`
 
                         <div className="space-y-8 text-gray-400 text-sm md:text-base leading-relaxed font-mono">
                             {point.content ? point.content.split(/(?:\r?\n){2,}/).map((para, i) => (
-                                <p key={i} className="mb-2 last:mb-0">
-                                    {para.trim()}
-                                </p>
+                                para.startsWith('### ') ? <h3 key={i} className="blog-subheading">{para.slice(4).trim()}</h3> : <p key={i} className="mb-2 last:mb-0">{para.trim()}</p>
                             )) : (
                                 <p className="text-red-900/50 uppercase tracking-widest text-xs">Error: Missing segment content.</p>
                             )}
                         </div>
 
                         <div className="mt-20 pt-8 border-t border-gray-900 flex justify-between items-center text-[10px] text-gray-700 font-mono italic">
-                            <span>TRANSCRIPT CAPTURED: {point.date}</span>
-                            <span>ETHEL_RYKER.LOG // S9_FRAG</span>
+                            <span>{point.date}</span>
+                            <span>Ethel Ryker</span>
                         </div>
                     </div>
                 </div>
@@ -1144,6 +1409,16 @@ I monitor her signal. If it drops, I move.`
     </script>
 
     <!-- BACKGROUND AUDIO (Privacy-Enhanced) -->
+    <style>
+        #background-music-toggle{position:fixed;right:max(16px,env(safe-area-inset-right));top:max(6px,env(safe-area-inset-top));z-index:10020;display:flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border:1px solid #ffffff26;border-radius:50%;background:#131310;color:#d2a078;opacity:.65;font:16px/1 monospace;cursor:pointer;touch-action:manipulation;transition:opacity .2s,border-color .2s}
+        #background-music-toggle:hover,#background-music-toggle:focus-visible{opacity:1;border-color:#d2a078}
+        #background-music-toggle:focus-visible{outline:2px solid #e4bc7e;outline-offset:4px}
+        #background-music-toggle .music-symbol{font-size:16px;display:block}
+        #background-music-toggle .music-label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+        .ethel-header{padding-right:max(80px,calc(env(safe-area-inset-right) + 64px))!important}
+        @media(prefers-reduced-motion:reduce){#background-music-toggle{transition:none}}
+    </style>
+    <button id="background-music-toggle" type="button" aria-label="Play background music"><span class="music-symbol" aria-hidden="true">▶</span><span class="music-label">Play music</span></button>
     <script src="https://www.youtube.com/iframe_api"></script>
     <div id="yt-bg-player"
         style="position:fixed;bottom:0;right:0;width:1px;height:1px;opacity:0.01;pointer-events:none;z-index:-1;"></div>
@@ -1154,6 +1429,61 @@ I monitor her signal. If it drops, I move.`
         const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1);
         const FALLBACK_MP3 = 'https://pub-111e813bd5634cd8a9ecdd3d5c2a0916.r2.dev/PixelStortionSongs/11.NormalEthelV1.mp3';
         let audioStarted = false;
+        let backgroundAudioSuppressed = false;
+        let backgroundAudioManuallyPaused = false;
+        const musicToggle = document.getElementById('background-music-toggle');
+        function updateMusicControl() {
+            const enabled = audioStarted && !backgroundAudioManuallyPaused;
+            musicToggle.querySelector('.music-symbol').textContent = enabled ? 'Ⅱ' : '▶';
+            musicToggle.querySelector('.music-label').textContent = enabled ? (backgroundAudioSuppressed ? 'Music: auto-resume' : 'Pause music') : 'Play music';
+            musicToggle.setAttribute('aria-label', enabled ? 'Pause background music' : 'Play background music');
+            musicToggle.title = backgroundAudioSuppressed && enabled ? 'Paused for the selected song. Click to keep background music paused.' : musicToggle.getAttribute('aria-label');
+        }
+        musicToggle.addEventListener('click', function (event) {
+            event.stopPropagation();
+            if (audioStarted && !backgroundAudioManuallyPaused) {
+                backgroundAudioManuallyPaused = true;
+                if (mp3Fallback) mp3Fallback.pause();
+                if (bgPlayer && bgPlayer.pauseVideo) { try { bgPlayer.pauseVideo(); } catch (e) {} }
+            } else {
+                backgroundAudioManuallyPaused = false;
+                if (!backgroundAudioSuppressed) {
+                    if (mp3Fallback) {
+                        audioStarted = true;
+                        mp3Fallback.play().catch(function () { audioStarted = false; updateMusicControl(); });
+                    } else {
+                        audioStarted = false;
+                        startBackgroundAudio();
+                    }
+                }
+            }
+            updateMusicControl();
+        });
+        document.addEventListener('fullscreenchange', function () {
+            (document.fullscreenElement || document.body).appendChild(musicToggle);
+        });
+        window.stopEthelBackgroundAudio = function () {
+            backgroundAudioSuppressed = true;
+            audioStarted = true;
+            ['click', 'touchend', 'keydown'].forEach(function (evt) {
+                document.removeEventListener(evt, startBackgroundAudio);
+            });
+            if (mp3Fallback) mp3Fallback.pause();
+            if (bgPlayer && bgPlayer.pauseVideo) { try { bgPlayer.pauseVideo(); } catch (e) {} }
+            updateMusicControl();
+        };
+        window.resumeEthelBackgroundAudio = function () {
+            if (!backgroundAudioSuppressed) return;
+            backgroundAudioSuppressed = false;
+            updateMusicControl();
+            if (backgroundAudioManuallyPaused) return;
+            if (mp3Fallback) {
+                mp3Fallback.play().catch(function () {});
+            } else {
+                audioStarted = false;
+                startBackgroundAudio();
+            }
+        };
         let mp3Fallback = null;
 
         // --- DESKTOP: YouTube (privacy-enhanced mode) ---
@@ -1178,7 +1508,9 @@ I monitor her signal. If it drops, I move.`
                             playerReady = true;
                         },
                         'onStateChange': function (event) {
+                            ytPlaying = event.data === YT.PlayerState.PLAYING;
                             if (event.data === YT.PlayerState.PLAYING) {
+                                if (backgroundAudioSuppressed || backgroundAudioManuallyPaused || mp3Fallback) { event.target.pauseVideo(); return; }
                                 ytPlaying = true;
                             }
                         },
@@ -1195,16 +1527,21 @@ I monitor her signal. If it drops, I move.`
         }
 
         function playMP3Fallback() {
+            if (backgroundAudioSuppressed || backgroundAudioManuallyPaused || !audioStarted) return;
             if (mp3Fallback) return; // Already playing
+            if (bgPlayer && bgPlayer.pauseVideo) { try { bgPlayer.pauseVideo(); } catch (e) {} }
             mp3Fallback = new Audio(FALLBACK_MP3);
             mp3Fallback.volume = 0.3;
             mp3Fallback.loop = true;
-            mp3Fallback.play().catch(function () { });
+            mp3Fallback.play().catch(function () { audioStarted = false; updateMusicControl(); });
         }
 
-        function startBackgroundAudio() {
+        function startBackgroundAudio(event) {
+            if (event && event.target.closest && event.target.closest('#background-music-toggle')) return;
+            if (backgroundAudioSuppressed || backgroundAudioManuallyPaused) return;
             if (audioStarted) return;
             audioStarted = true;
+            updateMusicControl();
             ['click', 'touchend', 'keydown'].forEach(function (evt) {
                 document.removeEventListener(evt, startBackgroundAudio);
             });
