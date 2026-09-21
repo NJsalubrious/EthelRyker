@@ -697,7 +697,9 @@ window.ETHEL_AUDIT_NODES = [
     "image": "library/images/nodes/gran-older-elizabeth.jpg",
     "group": "The wider record",
     "url": "https://silenceisthetrauma.com/people/dr_elizabeth_ryker_memorial.html",
-    "cluster": "The family, the band, and the ones who made them"
+    "cluster": "The family, the band, and the ones who made them",
+    "dates": "c. 1944–2019",
+    "lifeDates": "Born c. 1944. Died February 2019."
   },
   {
     "id": "audit-70",
@@ -707,17 +709,22 @@ window.ETHEL_AUDIT_NODES = [
     "image": "library/images/nodes/pop_ryker_memorial-avatar.jpg",
     "group": "The wider record",
     "url": "https://silenceisthetrauma.com/people/pop_ryker_memorial.html",
-    "cluster": "The family, the band, and the ones who made them"
+    "cluster": "The family, the band, and the ones who made them",
+    "dates": "c. 1940–2019",
+    "lifeDates": "Born c. 1940. Died February 2019."
   },
   {
     "id": "audit-71",
     "name": "Isla's Mother",
     "role": "Isla’s mother · later married Dominic",
-    "note": "Isla’s song Memory Under Water makes me sad. She is still asking whether her mother loved her. What her mother failed to do for her doesn’t make that question go away.",
+    "note": "Isla’s song Memory Under Water makes me sad. It remembers a mother who kept up appearances and taught her daughter to hide what was wrong. Isla is still asking whether she was loved. What her mother failed to do for her doesn’t make that question go away.",
     "image": "library/images/nodes/mother-isla.jpg",
     "group": "The wider record",
     "url": "https://silenceisthetrauma.com/people/society_obituary_archive.html",
-    "cluster": "The family, the band, and the ones who made them"
+    "cluster": "The family, the band, and the ones who made them",
+    "dates": "Died 2021",
+    "lifeDates": "Birth date not recorded. Died during the trial in 2021.",
+    "showFullNote": true
   },
   {
     "id": "audit-72",
@@ -797,7 +804,9 @@ window.ETHEL_AUDIT_NODES = [
     "image": "library/images/nodes/dominic-ryker-avatar.jpg",
     "group": "The wider record",
     "url": "https://www.dominicryker.com/",
-    "cluster": "The family, the band, and the ones who made them"
+    "cluster": "The family, the band, and the ones who made them",
+    "dates": "Born 1967",
+    "lifeDates": "Born 1967."
   },
   {
     "id": "audit-80",
@@ -807,7 +816,9 @@ window.ETHEL_AUDIT_NODES = [
     "image": "library/images/ethel-street.jpg",
     "group": "The wider record",
     "url": "https://www.ethelryker.com/",
-    "cluster": "The family, the band, and the ones who made them"
+    "cluster": "The family, the band, and the ones who made them",
+    "dates": "Born 2001",
+    "lifeDates": "Born late 2001, around November."
   },
   {
     "id": "audit-81",
@@ -817,7 +828,9 @@ window.ETHEL_AUDIT_NODES = [
     "image": "library/images/nodes/isla-band-avatar.jpg",
     "group": "The wider record",
     "url": "https://www.islaband.com/",
-    "cluster": "The family, the band, and the ones who made them"
+    "cluster": "The family, the band, and the ones who made them",
+    "dates": "Born 2001",
+    "lifeDates": "Born late February 2001."
   },
   {
     "id": "audit-82",
@@ -1074,7 +1087,7 @@ window.ETHEL_AUDIT_NODES = [
     "name": "Keep It Real Bro Podcast",
     "role": "Chad Sterling and Dexter “Dex” Vance · podcast",
     "note": "They read trial footage as if it were a whole person. Chad’s father is Lachlan Sterling, who ran my father’s development company. The show defends that business without mentioning the connection.",
-    "image": "library/images/nodes/keep-it-real-bros_serious-discussion.jpg",
+    "image": "library/images/nodes/keep_it_real_bro_podcast-avatar.jpg",
     "group": "The commentary",
     "url": "https://silenceisthetrauma.com/people/keep_it_real_bro.html",
     "cluster": "The media nodes — the five performances"
@@ -1084,7 +1097,7 @@ window.ETHEL_AUDIT_NODES = [
     "name": "Zero State Media",
     "role": "Orion and Luna · media outlet",
     "note": "They described the missing workers as having liberated themselves. Nobody had heard from the workers. A disappearance became something to celebrate because it fitted the account they already wanted to give.",
-    "image": "library/images/nodes/zero-state-media-avatar.jpg",
+    "image": "library/images/nodes/zero-state-media-logo-avatar.jpg",
     "group": "The commentary",
     "url": "https://silenceisthetrauma.com/people/zero_state_media.html",
     "cluster": "The media nodes — the five performances"

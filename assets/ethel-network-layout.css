@@ -1,0 +1,10 @@
+.is-criminal .cluster-region{fill:var(--cluster-colour);fill-opacity:.035;stroke:var(--cluster-colour);stroke-opacity:.32;stroke-width:3;stroke-dasharray:16 12;pointer-events:none}
+.is-criminal .force-edge.group{opacity:0}
+.is-criminal .force-edge path{stroke-opacity:.5;stroke-width:2.5}
+.is-criminal .force-edge.edge-lit path{stroke-opacity:1;stroke-width:5!important}
+.is-criminal .person-node{border-color:var(--cluster-colour,#b3a07a80)}
+.is-criminal .group-node{width:var(--cluster-label-width,680px);height:var(--cluster-label-height,85px);border:0;background:transparent;box-shadow:none;border-radius:0}
+.is-criminal .group-node .node-name{width:var(--cluster-label-width,680px);font-size:var(--cluster-label-size,27px);line-height:1.3;color:var(--cluster-colour,#d6b591);letter-spacing:.03em;background:#10110fe0}
+.is-criminal .nodes-scene,.is-criminal .nodes-scene svg{width:18000px;height:18000px}
+.is-criminal .person-node[data-influence="resists"]{box-shadow:0 0 0 10px #8ab5b01a;border-color:#92c4bb}
+.is-criminal .person-node[data-influence="follows"]{box-shadow:0 0 0 10px #d3a5701a}

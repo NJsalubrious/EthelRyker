@@ -51,3 +51,12 @@ const familyPath=(e,by)=>{
  return 'M '+a.x+' '+a.y+' L '+b.x+' '+b.y;
 };
 window.ETHEL_FAMILY_TREE={people:ETHEL_FAMILY,positions:FAMILY_POS,links:FAMILY_LINKS,path:familyPath,kind:familyKind};
+
+// Dates: family profiles and timeline/_WIP_timeline-dates (RECONCILED).md.
+Object.assign(ETHEL_FAMILY.gran,{"dates":"c. 1944–2019","lifeDates":"Born c. 1944. Died February 2019."});
+Object.assign(ETHEL_FAMILY.pop,{"dates":"c. 1940–2019","lifeDates":"Born c. 1940. Died February 2019."});
+Object.assign(ETHEL_FAMILY.islamother,{"dates":"Died 2021","lifeDates":"Birth date not recorded. Died during the trial in 2021.","note":"Isla’s song Memory Under Water makes me sad. It remembers a mother who kept up appearances and taught her daughter to hide what was wrong. Isla is still asking whether she was loved. What her mother failed to do for her doesn’t make that question go away.","showFullNote":true});
+Object.assign(ETHEL_FAMILY.dominic,{"dates":"Born 1967","lifeDates":"Born 1967."});
+Object.assign(ETHEL_FAMILY.ethel,{"dates":"Born 2001","lifeDates":"Born late 2001, around November."});
+Object.assign(ETHEL_FAMILY.isla,{"dates":"Born 2001","lifeDates":"Born late February 2001."});
+Object.assign(ETHEL_FAMILY.judge,{"dates":"Born 1962","lifeDates":"Born 27 April 1962. Died after the trial; date not recorded."});
