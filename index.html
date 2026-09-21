@@ -343,6 +343,9 @@
 <link rel="stylesheet" href="assets/ethel-songs.css"/>
 <link rel="stylesheet" href="assets/ethel-nodes.css"/>
 <script src="assets/ethel-nodes-data.js"></script>
+<script src="assets/ethel-family-tree.js"></script>
+<link rel="stylesheet" href="assets/ethel-family-tree.css">
+<link rel="stylesheet" href="assets/ethel-nodes-workspace.css">
 </head>
 
 <body class="ethel-option option-ride">
@@ -671,7 +674,6 @@ I monitor her signal. If it drops, I move.`
                                     setActiveSector('DATA_POINTS');
                                 }} icon={<Database size={18} />} label="Blog" />
                                 <NavButton active={activeSector === 'STATUS'} onClick={() => setActiveSector('STATUS')} icon={<Activity size={18} />} label="Songs" />
-                                <NavButton active={activeSector === 'ORIGIN'} onClick={() => setActiveSector('ORIGIN')} icon={<Database size={18} />} label="My story" />
                             </div>
                             <div className="p-4 border-t border-gray-800 text-[10px] text-gray-600 hidden md:block">
                                 <p>ENCRYPTION: AES-256</p>
@@ -694,7 +696,6 @@ I monitor her signal. If it drops, I move.`
                                 {activeSector === 'STATUS' && <EthelSongs />}
 {activeSector === 'NODES' && <EthelNodes onArchive={setActiveSector} />}
 {(activeSector === 'DOMINIC' || activeSector === 'ISLA') && <button className="node-text-link" onClick={()=>setActiveSector('NODES')}>← Back to Nodes</button>}
-                                {activeSector === 'ORIGIN' && <EthelMyStory onReadEssays={() => setActiveSector('DATA_POINTS')}><LogSection data={logs.ORIGIN} title="EARLIER ENTRIES" color="green" onSelect={setSelectedFile} /></EthelMyStory>}
                                 {activeSector === 'DOMINIC' && <LogSection data={logs.DOMINIC} title="SECTOR 9: THREAT CONTAINMENT" color="red" onSelect={setSelectedFile} />}
                                 {activeSector === 'ISLA' && <LogSection data={logs.ISLA} title="SECTOR 4: ALLIED VARIABLE" color="blue" onSelect={setSelectedFile} />}
                                 {activeSector === 'DATA_POINTS' && <DataPointsSection />}
@@ -726,46 +727,7 @@ I monitor her signal. If it drops, I move.`
 
 
 // BEGIN ETHEL NODES
-﻿const ETHEL_FAMILY = {
- gran:{id:'gran',name:'Gran',role:'Elizabeth Ryker · my grandmother',image:'library/images/nodes/gran-older-elizabeth.jpg',note:'Gran left school early and came to science late. She earned two PhDs, built her own laboratory and did work people came from across the world to be part of. She was curious about people, too. Warm, impatient, funny. There was always something she wanted to try, and usually someone she wanted to show it to.',x:300,y:170},
- pop:{id:'pop',name:'Pop',role:'Jonah · the father who raised me',image:'library/images/nodes/pop.jpg',note:'Pop wasn’t related to me by blood. He was my father in every way that mattered. The property, the bikes, coming home to him and Gran — that was my childhood.',x:780,y:170},
- dominic:{id:'dominic',name:'Dominic',role:'My father · Gran’s son',image:'library/images/nodes/dominic.jpg',note:'My father gave me the bike. I loved it. That doesn’t change what he did, or make the good memories easy to place.',x:170,y:480},
- ethel:{id:'ethel',name:'Me',role:'Ethel Ryker',image:'library/images/ethel-street.jpg',note:'Gran and Pop raised me. After they died, I was sent to my father. I still miss coming home to them.',x:540,y:480},
- isla:{id:'isla',name:'Isla',role:'My stepsister',image:'library/images/nodes/isla.jpg',note:'Isla went back for the files. I made the index so the police could find the originals. Neither part happened without the other.',x:940,y:480},
- nepal:{id:'nepal',name:'Gran, before us',role:'Nepal · 1966',image:'library/images/nodes/nepal.jpg',note:'This is Gran before I knew her. She travelled to Nepal in 1966. The man beside her was Dominic’s father. She came home without him.',x:540,y:300},
- loss:{id:'loss',name:'Their deaths',role:'The end of my childhood',image:'',note:'Their car had been crushed. Nobody could explain by what. Gran left records in a safety deposit box, and a number for an AFP contact.',x:540,y:190},
- trial:{id:'trial',name:'The trial',role:'2021 · the evidence',image:'',note:'People discussed the way I answered. The documents could be checked. That was where I wanted their attention.',x:540,y:180}
-};
-
-Object.assign(ETHEL_FAMILY,{
- father:{id:'father',name:'Dominic’s father',role:'Name unknown · Nepal, 1966',image:'library/images/nodes/father.jpg',note:'He travelled with Gran in Nepal. The field notes describe someone quiet, quick with languages, attentive to people. What happened to him is not recorded.',x:540,y:160},
- mother:{id:'mother',name:'My mother',role:'Name unknown',image:'',mark:'?',note:'I haven’t put a name here. I won’t fill that space by guessing.',x:850,y:170},
- islamother:{id:'islamother',name:'Isla’s mother',role:'My father’s wife',image:'library/images/nodes/mother-isla.jpg',note:'Isla’s song Memory Under Water makes me sad. Isla is still asking whether she was loved. What her mother failed to do for her doesn’t make that question go away.',url:'https://silenceisthetrauma.com/songs/isla-memory-under-water.html',x:540,y:160},
- judge:{id:'judge',name:'Isla’s father',role:'A High Court judge · her mother’s first husband',image:'library/images/nodes/islas-father.png',mark:'?',note:'Her father was a judge. My father was her stepfather. They are different men. Isla’s account of that first house is hers to tell.',x:930,y:180},
- marj:{id:'marj',image:'library/images/nodes/young-marj-kelso.jpg',name:'Marj Kelso',role:'Dominic’s foster mother · 1975',mark:'1975',note:'Marj says they gave him a good home. Her daughter stopped singing. Years later, she recorded what she had explained away at the time.',x:900,y:470},
- care:{id:'care',name:'Earlier foster homes',role:'Before 1975 · several placements',image:'',mark:'…',note:'There were other homes before Marj’s. One placement ended when the carer became ill. These gaps don’t tell us that those families hurt him.',x:900,y:150}
-});
-
-
-Object.assign(ETHEL_FAMILY,{
- greatgrandfather:{id:'greatgrandfather',image:'library/images/nodes/elizabeths-father-engineer.jpg',name:'Elizabeth’s father',role:'Irish · aviation engineer',note:'Gran came from Ireland with her family. Her father’s engineering work brought them here. He died of cancer soon after they arrived. She was very close to him.'},
- greatgrandmother:{id:'greatgrandmother',image:'library/images/nodes/elizabeths-mother.jpg',name:'Elizabeth’s mother',role:'Ireland → Australia',note:'Her husband died, then her son. Gran said her mother never recovered from those losses. The family was left in trouble.'},
- brother:{id:'brother',name:'Elizabeth’s brother',role:'Name not recorded',note:'Gran lost her brother to an autoimmune disease. I don’t have his name here.'},
- ray:{id:'ray',name:'Ray',role:'Dominic’s foster father · 1975',note:'He taught Dominic to solder. Marj remembered him coming home wanting to talk again. There was real good in that house, too.'},
- lynnie:{id:'lynnie',image:'library/images/nodes/lynnie.jpg',name:'Lynnie',role:'Marj and Ray’s daughter',note:'She was six. She tried to say something was wrong, and the adults explained it away. Marj remembered when she stopped singing.'},
- kevin:{id:'kevin',name:'Kevin',role:'Marj and Ray’s son',note:'Kevin was thirteen when Dominic came to live with them. Marj’s account tells us very little about him.'}
-});
-ETHEL_FAMILY.father.url='https://silenceisthetrauma.com/library/loc_archives/field-notes-from-the-langtang-trail.html';
-Object.assign(ETHEL_FAMILY,{
- popfather:{id:'popfather',name:'Pop’s father',role:'Cattle-station owner · Northern Territory',note:'Pop grew up on his parents’ station, near the country where the lab was built. After they died, the station was sold and the money divided between their three children.'},
- popmother:{id:'popmother',name:'Pop’s mother',role:'Māori · name not recorded',note:'Pop’s mother was Māori. He was the youngest child, much younger than his sisters.'},
- popsister1:{id:'popsister1',name:'Pop’s sister',role:'Hobart · name not recorded',note:'One of Pop’s two older sisters. About fifteen years separated him from them.'},
- popsister2:{id:'popsister2',name:'Pop’s sister',role:'Perth · name not recorded',note:'His other older sister lived in Perth. The station proceeds were shared three ways. Pop worked; he was comfortable, not wealthy.'}
-});
-const FAMILY_POS={greatgrandfather:[500,130],greatgrandmother:[850,130],brother:[1100,420],gran:[580,440],pop:[220,650],father:[1000,720],dominic:[850,1020],ethel:[450,1380],mother:[110,1070],islamother:[1250,1090],judge:[1620,1080],isla:[1320,1420],care:[1570,190],marj:[1600,480],ray:[1950,480],lynnie:[1900,820],kevin:[2200,820]};
-Object.assign(FAMILY_POS,{popfather:[-480,130],popmother:[-160,130],popsister1:[-510,450],popsister2:[-490,790]});
-const FAMILY_LINKS=[['greatgrandfather','greatgrandmother','partners'],['greatgrandfather','gran','father'],['greatgrandmother','gran','mother'],['greatgrandfather','brother','father'],['greatgrandmother','brother','mother'],['gran','pop','partners'],['gran','father','Nepal · 1966'],['gran','dominic','mother'],['father','dominic','father'],['gran','ethel','adoptive mother'],['pop','ethel','adoptive father · no blood tie'],['dominic','ethel','biological father'],['mother','ethel','biological mother'],['dominic','islamother','married'],['islamother','judge','first marriage'],['islamother','isla','mother'],['judge','isla','father'],['ethel','isla','stepsisters'],['care','dominic','earlier foster placements'],['marj','dominic','foster mother · 1975'],['ray','dominic','foster father · 1975'],['marj','ray','married'],['marj','lynnie','mother'],['ray','lynnie','father'],['marj','kevin','mother'],['ray','kevin','father']];
-FAMILY_LINKS.push(['popfather','popmother','partners'],['popfather','pop','father'],['popmother','pop','mother'],['popfather','popsister1','father'],['popmother','popsister1','mother'],['popfather','popsister2','father'],['popmother','popsister2','mother']);
+﻿const {people:ETHEL_FAMILY,positions:FAMILY_POS,links:FAMILY_LINKS}=window.ETHEL_FAMILY_TREE;
 const EthelNodes=({onArchive})=>{
  const [mode,setMode]=useState('family'),[selected,setSelected]=useState('gran'),[query,setQuery]=useState(''),[list,setList]=useState(false),[paused,setPaused]=useState(false),[revision,setRevision]=useState(0);
  const viewport=useRef(null),scene=useRef(null),installation=useRef(null),sim=useRef([]),graph=useRef({nodes:[],edges:[]}),els=useRef({}),paths=useRef({}),labels=useRef({}),drag=useRef(null),camera=useRef({x:0,y:0,z:1});
@@ -787,22 +749,22 @@ const EthelNodes=({onArchive})=>{
   return {nodes:[...nodes,...hubs],edges};
  };
  const writeCamera=v=>{camera.current=v;setView(v);};
- const fit=()=>{const r=viewport.current?.getBoundingClientRect(),ns=sim.current;if(!r||!ns.length)return;const minX=Math.min(...ns.map(n=>n.x))-160,maxX=Math.max(...ns.map(n=>n.x))+160,minY=Math.min(...ns.map(n=>n.y))-160,maxY=Math.max(...ns.map(n=>n.y))+190;const z=Math.min(r.width/(maxX-minX),r.height/(maxY-minY));writeCamera({z,x:(r.width-(maxX-minX)*z)/2-minX*z,y:(r.height-(maxY-minY)*z)/2-minY*z});};
+ const fit=()=>{const r=viewport.current?.getBoundingClientRect(),ns=sim.current;if(!r||!ns.length)return;const minX=Math.min(...ns.map(n=>n.x))-160,maxX=Math.max(...ns.map(n=>n.x))+160,minY=Math.min(...ns.map(n=>n.y))-160,maxY=Math.max(...ns.map(n=>n.y))+(mode==='family'?230:190);const z=Math.min(r.width/(maxX-minX),r.height/(maxY-minY));writeCamera({z,x:(r.width-(maxX-minX)*z)/2-minX*z,y:(mode==='family'?Math.min(24,(r.height-(maxY-minY)*z)/2):(r.height-(maxY-minY)*z)/2)-minY*z});};
  const focus=(id,zoom=true)=>{setSelected(id);const n=sim.current.find(n=>n.id===id),r=viewport.current?.getBoundingClientRect();if(n&&r&&zoom){const z=Math.min(innerWidth<700?.85:1.05,Math.max(camera.current.z,.7));writeCamera({z,x:r.width/2-n.x*z,y:r.height/2-n.y*z});}};
- useEffect(()=>{const data=build();graph.current=data;sim.current=data.nodes.map(n=>({...n,ax:n.x,ay:n.y,vx:0,vy:0}));setRevision(v=>v+1);setSelected(mode==='family'?'gran':all.find(n=>n.name==='Dominic Ryker')?.id);setQuery('');drag.current=null;pointers.current.clear();pinch.current=null;const timer=setTimeout(()=>{fit();if(innerWidth<700)focus(mode==='family'?'gran':all.find(n=>n.name==='Dominic Ryker')?.id);},50);return()=>clearTimeout(timer);},[mode]);
+ useEffect(()=>{const data=build();graph.current=data;sim.current=data.nodes.map(n=>({...n,ax:n.x,ay:n.y,vx:0,vy:0}));setRevision(v=>v+1);setSelected(mode==='family'?'gran':all.find(n=>n.name==='Dominic Ryker')?.id);setQuery('');drag.current=null;pointers.current.clear();pinch.current=null;const timer=setTimeout(()=>{fit();if(innerWidth<700&&mode==='network')focus(all.find(n=>n.name==='Dominic Ryker')?.id);},50);return()=>clearTimeout(timer);},[mode]);
  useEffect(()=>{const el=viewport.current;if(!el)return;let initial=true;const ro=new ResizeObserver(entries=>{const r=entries[0].contentRect;if(initial){initial=false;if(pendingFocus.current){focus(pendingFocus.current);pendingFocus.current=null;}return;}const old=el._mapSize;if(old)writeCamera({...camera.current,x:camera.current.x+(r.width-old.width)/2,y:camera.current.y+(r.height-old.height)/2});el._mapSize={width:r.width,height:r.height};});el._mapSize={width:el.clientWidth,height:el.clientHeight};ro.observe(el);return()=>ro.disconnect();},[list]);
  useEffect(()=>{
   let frame,last=0;const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const tick=t=>{frame=requestAnimationFrame(tick);if(t-last<30||document.hidden)return;last=t;const ns=sim.current,by=Object.fromEntries(ns.map(n=>[n.id,n]));
    if(!paused&&(!reduced||drag.current?.id)){
     // Light gravity leaves room to rearrange the graph; springs carry a drag to neighbours.
-    for(const n of ns){const gx=mode==='family'?n.ax:2100,gy=mode==='family'?n.ay:2000;const gravity=mode==='family'?.00006:.000015;n.vx+=(gx-n.x)*gravity;n.vy+=(gy-n.y)*gravity;}
+    for(const n of ns){const gx=mode==='family'?n.ax:2100,gy=mode==='family'?n.ay:2000;const gravity=mode==='family'?.008:.000015;n.vx+=(gx-n.x)*gravity;n.vy+=(gy-n.y)*gravity;}
     for(let i=0;i<ns.length;i++)for(let j=i+1;j<ns.length;j++){const a=ns[i],b=ns[j];let dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy);if(d<.01){dx=1;dy=0;d=1;}if(d<1100){const min=mode==='family'?280:290,f=Math.min(2,1800/(d*d))+Math.max(0,min-d)*.025;dx=dx/d*f;dy=dy/d*f;a.vx-=dx;a.vy-=dy;b.vx+=dx;b.vy+=dy;}}
     for(const e of graph.current.edges){const a=by[e.a],b=by[e.b];if(!a||!b)continue;const dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||1,rest=mode==='family'?Math.hypot(b.ax-a.ax,b.ay-a.ay):e.kind==='group'?360:650,f=(d-rest)*(mode==='family'?.004:e.kind==='group'?.002:.0008);a.vx+=dx/d*f;a.vy+=dy/d*f;b.vx-=dx/d*f;b.vy-=dy/d*f;}
     for(const n of ns){if(drag.current?.id===n.id){n.vx=0;n.vy=0;continue;}n.vx*=.88;n.vy*=.88;n.x+=Math.max(-20,Math.min(20,n.vx));n.y+=Math.max(-20,Math.min(20,n.vy));}
    }
    for(const n of ns){const el=els.current[n.id];if(el){el.style.left=n.x+'px';el.style.top=n.y+'px';}}
-   graph.current.edges.forEach((e,i)=>{const a=by[e.a],b=by[e.b];if(a&&b){paths.current[i]?.setAttribute('d',`M ${a.x} ${a.y} L ${b.x} ${b.y}`);if(labels.current[i]){labels.current[i].setAttribute('x',(a.x+b.x)/2);labels.current[i].setAttribute('y',(a.y+b.y)/2-12);}}});
+   graph.current.edges.forEach((e,i)=>{const a=by[e.a],b=by[e.b];if(a&&b){paths.current[i]?.setAttribute('d',mode==='family'?window.ETHEL_FAMILY_TREE.path(e,by):`M ${a.x} ${a.y} L ${b.x} ${b.y}`);if(labels.current[i]){labels.current[i].setAttribute('x',(a.x+b.x)/2);labels.current[i].setAttribute('y',(a.y+b.y)/2-12);}}});
   };frame=requestAnimationFrame(tick);return()=>cancelAnimationFrame(frame);
  },[mode,paused,revision]);
  const zoom=(factor,point)=>{const r=viewport.current?.getBoundingClientRect();if(!r)return;const v=camera.current,z=Math.max(.04,Math.min(3,v.z*factor)),px=point?point.x-r.left:r.width/2,py=point?point.y-r.top:r.height/2;writeCamera({z,x:px-(px-v.x)*z/v.z,y:py-(py-v.y)*z/v.z});};
@@ -813,7 +775,7 @@ const EthelNodes=({onArchive})=>{
  const pointerEnd=e=>{e.stopPropagation();pointers.current.delete(e.pointerId);pinch.current=null;drag.current=null;if(pointers.current.size===1){const [pointer,p]=[...pointers.current.entries()][0];drag.current={id:null,pointer,x:p.x,y:p.y,view:{...camera.current}};}};
  const nodes=graph.current.nodes,edges=graph.current.edges,current=nodes.find(n=>n.id===selected),results=nodes.filter(n=>n.kind!=='group'&&(!query||(n.name+' '+n.role).toLowerCase().includes(query.toLowerCase())));
  const title=mode==='family'?'Ryker Family Tree':'Silence Is The Trauma Complete Network';
- return <section className={'nodes-installation nodes-force '+(mode==='network'?'is-criminal':'')} ref={installation}>
+ return <section className={'nodes-installation nodes-force '+(mode==='network'?'is-criminal':'is-family-tree')} ref={installation}>
  <header className="nodes-heading"><div><p className="nodes-kicker">Ethel Ryker / connections</p><h2>Nodes<span>.</span></h2></div><p>Move a person. Watch what moves with them.</p></header>
  <div className="nodes-chapters" aria-label="Choose a network"><button aria-pressed={mode==='family'} onClick={()=>{setMode('family');setList(false);}}>Ryker Family Tree</button><button aria-pressed={mode==='network'} onClick={()=>{setMode('network');setList(false);}}>Silence Is The Trauma Complete Network</button></div>
  <div className="force-toolbar"><h3>{title}</h3><label>Find someone <input type="search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Name or role"/></label><div className="force-top-controls"><button onClick={()=>zoom(.8)} aria-label="Zoom out">−</button><button onClick={fit}>Fit all</button><button onClick={()=>zoom(1.25)} aria-label="Zoom in">+</button><output aria-label="Map zoom">{Math.round(view.z*100)}%</output><button onClick={()=>setList(!list)}>{list?'Map':'List'}</button></div></div>
@@ -821,13 +783,13 @@ const EthelNodes=({onArchive})=>{
  <div className="nodes-body"><div className="nodes-field">
  {list?<div className="nodes-list">{results.map(n=><button key={n.id} onClick={()=>focus(n.id,false)} aria-pressed={selected===n.id}>{n.name}<small>{n.role}</small></button>)}</div>:<div className="nodes-viewport" ref={viewport} onPointerDown={e=>pointerDown(e,null)} onPointerMove={pointerMove} onPointerUp={pointerEnd} onPointerCancel={pointerEnd} onLostPointerCapture={pointerEnd} tabIndex={0} role="region" aria-label={title+" interactive map. Scroll or pinch to zoom. Drag to pan."} onKeyDown={e=>{if(e.target!==e.currentTarget)return;if(e.key==='+'||e.key==='='){e.preventDefault();zoom(1.25);}else if(e.key==='-'){e.preventDefault();zoom(.8);}else if(e.key==='0'){e.preventDefault();fit();}}}>
  <div className="nodes-scene" ref={scene} style={{transform:`translate(${view.x}px,${view.y}px) scale(${view.z})`}}>
- <svg width="6000" height="6000" aria-hidden="true">{edges.map((e,i)=><g key={i} className={'force-edge '+e.kind+(e.a===selected||e.b===selected?' edge-lit':'')}><path ref={el=>paths.current[i]=el}/>{(e.a===selected||e.b===selected)&&e.kind!=='group'&&<text ref={el=>labels.current[i]=el} textAnchor="middle">{e.label}</text>}</g>)}</svg>
+ <svg width="6000" height="6000" aria-hidden="true">{edges.map((e,i)=><g key={i} className={'force-edge '+(mode==='family'?window.ETHEL_FAMILY_TREE.kind(e):e.kind)+(e.a===selected||e.b===selected?' edge-lit':'')}><path ref={el=>paths.current[i]=el}/>{(e.a===selected||e.b===selected)&&e.kind!=='group'&&<text ref={el=>labels.current[i]=el} textAnchor="middle">{e.label}</text>}</g>)}</svg>
  {nodes.map(n=><button key={n.id} ref={el=>els.current[n.id]=el} data-node-id={n.id} className={'person-node '+(n.kind==='group'?'group-node ':'')+(n.image?'':'is-event ')+(selected===n.id?'is-selected':'')} aria-label={n.name+': '+n.role} aria-pressed={selected===n.id} onPointerDown={e=>pointerDown(e,n.id)} onPointerMove={pointerMove} onPointerUp={pointerEnd} onPointerCancel={pointerEnd} onLostPointerCapture={pointerEnd} onClick={()=>setSelected(n.id)} onDoubleClick={()=>focus(n.id)} onKeyDown={e=>{const delta={ArrowLeft:[-40,0],ArrowRight:[40,0],ArrowUp:[0,-40],ArrowDown:[0,40]}[e.key];if(delta){e.preventDefault();const p=sim.current.find(x=>x.id===n.id);p.x+=delta[0];p.y+=delta[1];setSelected(n.id);}}}>
- {n.image?<img src={n.name==='Ethel Ryker'?'library/images/ethel-street.jpg':n.image} alt="" draggable="false"/>:<span className="node-mark">{n.kind==='group'?'':n.name==='L. Ostrowska'?'—':n.name.split(' ').map(x=>x[0]).slice(0,2).join('')}</span>}<span className="node-name">{n.name}</span></button>)}
+ {n.image?<img src={mode==='network'&&n.name==='Ethel Ryker'?'library/images/ethel-street.jpg':n.image} alt="" draggable="false"/>:<span className="node-mark">{n.kind==='group'?'':n.name==='L. Ostrowska'?'—':n.name.split(' ').map(x=>x[0]).slice(0,2).join('')}</span>}<span className="node-name">{n.name}</span>{mode==='family'&&<span className="family-node-role">{n.role}</span>}</button>)}
  </div></div>}
  <div className="nodes-controls"><span>Scroll / pinch to zoom · drag to move · double-click a person</span><div><button onClick={()=>zoom(.8)} aria-label="Zoom out">−</button><button onClick={fit}>Fit all</button><button onClick={()=>zoom(1.25)} aria-label="Zoom in">+</button><button onClick={()=>{sim.current.forEach(n=>{n.x=n.ax;n.y=n.ay;n.vx=n.vy=0;});fit();}}>Reset</button><button aria-pressed={paused} onClick={()=>setPaused(!paused)}>{paused?'Release':'Hold still'}</button><button aria-label="Toggle full screen" onClick={()=>document.fullscreenElement?document.exitFullscreen():installation.current.requestFullscreen?.().catch(()=>{})}>⛶</button></div></div>
- </div><aside className="node-note" aria-live="polite">{current&&<><p className="nodes-kicker">{mode==='family'?'My notes':current.cluster||'Connections'}</p><h3>{current.name}</h3><p className="node-role">{current.role}</p><p className="node-prose">{current.note?.length>260&&!current.name.startsWith('Gran')?current.note.split(/(?<=[.!?])\s/)[0]:current.note}</p>{current.note?.length>260&&!current.name.startsWith('Gran')&&<details className="node-photos"><summary>Read the full note</summary><p>{current.note}</p></details>}{current.url&&<a className="node-text-link" href={current.url} target="_blank" rel="noopener noreferrer">{current.id==='father'?'Nepal · the field notes':current.id==='islamother'?'Isla · Memory Under Water':'Their page'} ↗</a>}{['isla','dominic'].includes(current.id)&&<button className="node-text-link" onClick={()=>onArchive(current.id.toUpperCase())}>Earlier entries →</button>}{mode==='family'&&['islamother','dominic'].includes(current.id)&&<details className="node-photos"><summary>Wedding photographs</summary><p>Isla’s mother marrying Dominic.</p><div>{['01','02','03','04'].map(i=><a key={i} href={'library/images/nodes/wedding-'+i+'.jpg'} target="_blank" rel="noopener noreferrer"><img src={'library/images/nodes/wedding-'+i+'.jpg'} alt={'Isla’s mother at her wedding to Dominic, photograph '+i}/></a>)}</div></details>}<div className="node-connections"><p>Connections</p>{edges.filter(e=>(e.a===selected||e.b===selected)&&e.kind!=='group').map((e,i)=>{const n=nodes.find(n=>n.id===(e.a===selected?e.b:e.a));return <button key={i} onClick={()=>focus(n.id)}>{n.name}<span>{e.label} →</span></button>})}</div></>}</aside></div>
- <footer className="nodes-footer"><span>{mode==='family'?'Blood, adoption, marriage and foster care — each connection is named.':'Solid lines: named relationships. Dotted lines: related records, not proof of complicity. The Australian operation was seized at trial.'}</span><span>{nodes.filter(n=>n.kind!=='group').length} entries · one continuous map</span></footer>
+ </div><aside className="node-note" aria-live="polite">{current&&<><p className="nodes-kicker">{mode==='family'?'My notes':current.cluster||'Connections'}</p><h3>{current.name}</h3><p className="node-role">{current.role}</p><p className="node-prose">{current.note?.length>260&&!current.name.startsWith('Gran')?current.note.split(/(?<=[.!?])\s/)[0]:current.note}</p>{current.note?.length>260&&!current.name.startsWith('Gran')&&<details className="node-photos"><summary>Read the full note</summary><p>{current.note}</p></details>}{current.url&&<a className="node-text-link" href={current.url} target="_blank" rel="noopener noreferrer">{current.id==='father'?'Nepal · the field notes':current.id==='islamother'?'Isla · Memory Under Water':'Their page'} ↗</a>}{['isla','dominic'].includes(current.id)&&<button className="node-text-link" onClick={()=>onArchive(current.id.toUpperCase())}>Earlier entries →</button>}{mode==='family'&&['islamother','dominic'].includes(current.id)&&<details className="node-photos"><summary>Wedding photographs</summary><p>Isla’s mother marrying Dominic.</p><div>{['01','02','03','04'].map(i=><a key={i} href={'library/images/family-tree/wedding-'+i+'.jpg'} target="_blank" rel="noopener noreferrer"><img src={'library/images/family-tree/wedding-'+i+'.jpg'} alt={'Isla’s mother at her wedding to Dominic, photograph '+i}/></a>)}</div></details>}<div className="node-connections"><p>Connections</p>{edges.filter(e=>(e.a===selected||e.b===selected)&&e.kind!=='group').map((e,i)=>{const n=nodes.find(n=>n.id===(e.a===selected?e.b:e.a));return <button key={i} onClick={()=>focus(n.id)}>{n.name}<span>{e.label} →</span></button>})}</div></>}</aside></div>
+ <footer className="nodes-footer"><span>{mode==='family'?'Solid: parents / partners. Dashed: adoption. Dotted: foster care / stepsisters. Drag to explore; Reset restores the generations.':'Solid lines: named relationships. Dotted lines: related records, not proof of complicity. The Australian operation was seized at trial.'}</span><span>{nodes.filter(n=>n.kind!=='group').length} entries · one continuous map</span></footer>
  </section>;
 };
 
@@ -851,7 +813,6 @@ const EthelNodes=({onArchive})=>{
                         <p className="hero-thought">Those rides…<br/>they were how I thought.</p>
                         <p className="hero-description">Just the bike, the road, and space that didn’t ask anything of me.</p>
                         <div className="hero-actions">
-                            <button onClick={() => navigate('ORIGIN')}>My story <span>↗</span></button>
                             <button onClick={() => navigate('DATA_POINTS')}>Blog <span>↗</span></button>
                         </div>
                     </div>
@@ -860,67 +821,6 @@ const EthelNodes=({onArchive})=>{
             </div>
         );
 
-// Sandbox draft: fresh retrospective prose, not a transcription of the songs.
-const EthelMyStory = ({ children, onReadEssays }) => (
-    <article className="ethel-story">
-        <header className="story-heading">
-            <p className="eyebrow">Ethel Ryker / My story</p>
-            <h2>My story</h2>
-            <p className="story-intro">I was sixteen when the police came to tell me Gran and Pop were dead. I remember watching them come up the dirt drive. Somehow I already knew what they were there to say.</p>
-        </header>
-        <div className="story-prose">
-            <section>
-                <p>The car had been crushed. Whatever had done that was gone. Nobody could account for it, but they called it an accident. I’m still not sure who that explanation was meant to satisfy. I didn’t get the impression it satisfied the people saying it.</p>
-                <p>I miss Gran and Pop terribly. I miss how safe I felt with them. There was so much I never had to worry about, including whether they understood me.</p>
-                <p>Gran’s mind worked much like mine. We could get absorbed in something together without either of us having to slow down and explain every step. She ran a commercial lab out there, with people coming to work and study. Pop looked after the property and kept the bikes running. I spent hours riding, then came home to whatever they were doing.</p>
-                <p>I was happy there. It matters to me to say that. What happened afterwards takes up most of any account of my life, and those years with them get very little space.</p>
-                <p>There was no time to get used to losing them before people started deciding what would happen to me. I was still trying to understand that neither of them was coming home. Everyone was talking about where I would live next.</p>
-                <p>Gran had kept a safety deposit box. Inside were records going back twenty years, things she had been dealing with that I was only beginning to understand. There was an AFP contact number among them. I called it.</p>
-                <p>The man who answered knew her. From the way he spoke, I thought he knew why I was calling too. I hadn’t expected that. I’d been ready to explain what I’d found, but he began explaining things to me. He had been involved in a part of her life I hadn’t known about. Now she was gone, and I was on the phone.</p>
-            </section>
-            <section>
-                <h3>My father</h3>
-                <p>Dominic was my father. I hardly knew him. Gran had kept him away from us, and now I was being sent to live with him.</p>
-                <p>I told myself I had decided to go. I knew I hadn’t, but I needed some part of what happened next to be up to me. That was how I managed it at the time.</p>
-                <p>He had a motorcycle waiting for me. A black Honda, chosen by someone who knew what I rode. We had been estranged. He was very well informed.</p>
-                <p>I took the bike without accepting what he wanted it to mean. I still ride it.</p>
-                <p>People liked telling you what Dominic had built. They had buildings to point at. Jobs. Favours he had done them. Some of those favours were real. That made the next part easier to excuse.</p>
-                <p>A person can be grateful for something and still ask what happened to somebody else. In his world, that question was treated as disloyalty. Often nobody needed to say so. People supplied the explanation themselves, then behaved as though they had checked it.</p>
-                <p>I wanted some of his explanations to be true too. It would have made living there easier.</p>
-            </section>
-            <section>
-                <h3>Isla</h3>
-                <p>Isla was there. People had plenty to say about her behaviour. Much less about what she was living with.</p>
-                <p>I liked her. She could be exhausting, and I liked her. I worried about her too. There was a lot going on that nobody wanted to ask about.</p>
-                <p>Later, a man came into the kitchen to kill one of us. I couldn’t move. A man died in front of me. There are accounts of that period which make everything I did sound deliberate. They leave this out.</p>
-                <p>Afterwards, I photographed what the cameras hadn’t caught. Then I was sick. Getting a record of it didn’t mean I was all right.</p>
-                <p>Isla went back for the records while I was still recovering. She got them out. The work with the AFP took months after that. Whenever the story becomes a daughter bringing down her father, Isla disappears from something that depended on her.</p>
-            </section>
-            <section>
-                <h3>The witness box</h3>
-                <p>I was nineteen. I gave evidence over five months.</p>
-                <p>A question could sound reasonable and contain something I hadn’t said. Answer it too quickly and the added part became mine. So I took the time to separate it. There were people in those records who couldn’t come in and correct an answer afterwards.</p>
-                <p>The coverage found names for how I sat, how I spoke, the time I took. Some of it was hostile. Some was admiring. Both could get a long way from the evidence.</p>
-                <p>I understand wanting a person to make sense quickly. Most of us have more to do than learn a stranger’s life. But a description becomes dangerous when it lets you stop checking what is being done to them.</p>
-                <p>I didn’t answer the commentary. There were people in the evidence who had lost family, work, years of their lives. I wanted the questions to be about what had happened to them.</p>
-            </section>
-            <section>
-                <h3>Since</h3>
-                <p>I finished my degree. I kept riding. My father later escaped from prison. The conditions that allowed that deserve more attention than another account of how exceptional he is.</p>
-                <p>I still think about telling Gran things. Something I’ve worked out, or something she would have found funny. I know she’s gone. I still have the thought.</p>
-            </section>
-            <aside className="story-next">
-                <p className="eyebrow">Blog</p>
-                <p>I’ve written more about this in <em>The Outlier’s Defense</em> and <em>The Alibi in the Ink</em>.</p>
-                <button onClick={onReadEssays}>Read the blog ↗</button>
-            </aside>
-            <details className="story-archive">
-                <summary>Earlier archive entries</summary>
-                <div>{children}</div>
-            </details>
-        </div>
-    </article>
-);
         const ETHEL_SONGS = [
   {
     "id": 18,

@@ -1,0 +1,12 @@
+/* Scoped to the family tree; the complete network keeps its existing appearance. */
+.is-family-tree .person-node{width:270px;height:280px;border-radius:14px;background:#181c16;padding:14px;box-shadow:none;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
+.is-family-tree .person-node img{width:140px;height:140px;border-radius:50%;flex-shrink:0}
+.is-family-tree .node-mark{display:flex;align-items:center;justify-content:center;width:140px;height:140px;border:1px solid #b3a07a55;border-radius:50%;flex-shrink:0}
+.is-family-tree .node-name{position:static;transform:none;width:100%;font:27px/1.15 Georgia;margin-top:12px;background:none;text-shadow:none}
+.is-family-tree .family-node-role{display:block;color:#c2b494;font:17px/1.3 Arial,sans-serif;margin-top:8px;max-width:238px;text-align:center;white-space:normal}
+.is-family-tree .force-edge path{stroke:#bca77caa;stroke-width:3}
+.is-family-tree .force-edge.adoption path{stroke:#a7bbb2;stroke-dasharray:16 10}
+.is-family-tree .force-edge.foster path,.is-family-tree .force-edge.step path{stroke:#b99c80;stroke-dasharray:5 12}
+.is-family-tree .nodes-scene text{font-size:19px}
+.is-family-tree .person-node:hover,.is-family-tree .person-node.is-selected{background:#252a20;border-color:#e5bd80;box-shadow:0 0 24px #c09a4d20}
+@media(max-width:700px){.is-family-tree .nodes-viewport{height:340px;min-height:300px}.is-family-tree .person-node{width:270px;height:280px}.is-family-tree .node-name{font-size:27px}}
